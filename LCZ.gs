@@ -5,12 +5,14 @@
 //   CreateTimer("d1",1, 0)
 //end
 
+global tokill = [64,SE_INT]
+
 def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will occur in T-Minus" + " " + mins + " " + "minutes")
     if mins > 5 then
-        CreateTimer("DecomTimer",10000, 0, mins-5)
+        CreateTimer("DecomTimer",10, 0, mins-5) //CHANGE!
     else
-        CreateTimer("Decom",10000, 0)
+        CreateTimer("Decom",10, 0) //CHANGE!
     end
 end
 
@@ -23,7 +25,7 @@ def dmg()
         SetPlayerType(1,0)
         ServerMessage(GetPlayerNickname(1)+" was killed by Decontamination Procedure")
     end
-end
+end        
 
 def Decom()
     ServerMessage("[FACILITY] LCZ Decontamination Process has started")

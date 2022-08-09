@@ -16,8 +16,10 @@ end
 
 def dmg()
     hp = GetPlayerHealth(1)
-    SetPlayerHealth(1,hp-10)
-    CreateTimer("dmg",1000, 0)
+    if hp > 0 then
+        SetPlayerFakeHealth(1,hp-10)
+        CreateTimer("dmg",1000, 0)
+    end
 end
 
 def Decom()

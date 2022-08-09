@@ -9,8 +9,23 @@ def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will occur in T-Minus" + " " + mins + " " + "minutes")
     if mins > 5 then
         CreateTimer("DecomTimer",10000, 0, mins-5)
+    else
+        CreateTimer("Decom",10000, 0)
     end
 end
+
+def dmg()
+    hp = GetPlayerHealth(1)
+    SetPlayerHealth(1,hp-10)
+    CreateTimer("dmg",1000, 0)
+end
+
+def Decom()
+    ServerMessage("[FACILITY] LCZ Decontamination Process has started")
+    dmg()
+end
+
+
 
 public def OnPlayerChat()
     CreateTimer("DecomTimer",1, 0, 15)

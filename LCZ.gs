@@ -5,7 +5,7 @@
 //   CreateTimer("d1",1, 0)
 //end
 
-global tokill = [64,SE_INT]
+global tokill = False
 
 def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will occur in T-Minus" + " " + mins + " " + "minutes")
@@ -16,23 +16,37 @@ def DecomTimer(mins)
     end
 end
 
-def dmg()
-    hp = GetPlayerHealth(1)
+def dmg(plr)
+    if GetPlayerZone(plr) != 1 then
+        return
+    end
+    hp = GetPlayerHealth(plr)
     if hp > 10 then
-        SetPlayerFakeHealth(1,hp-10)
-        CreateTimer("dmg",1000, 0)
+        SetPlayerFakeHealth(plr,hp-10)
+        CreateTimer("dmg",1000, 0,plr)
     else
-        SetPlayerType(1,0)
-        ServerMessage(GetPlayerNickname(1)+" was killed by Decontamination Procedure")
+        SetPlayerType(plr,0)
+        ServerMessage(GetPlayerNickname(plr)+" was killed by Decontamination Procedure")
     end
 end        
 
-def Decom()
-    ServerMessage("[FACILITY] LCZ Decontamination Process has started")
-    dmg()
+def StartSuffering()
+    for x; x < 65; x++
+        if GetPlayerZone(x) == 1 and tokill == True and GetPlayerType(x) != 0 then
+            dmg(x)
+        end
+    end
+    CreateTimer("StartSuffering",5000,0)
 end
 
+def Decom()
+    ServerMessage("[FACILITY] LCZ Decontamination Process has started")
+    StartSuffering()
+end
 
+public def OnPlayerClickButton()
+    StartSuffering()
+end
 
 public def OnPlayerChat()
     CreateTimer("DecomTimer",1, 0, 15)
@@ -44,8 +58,8 @@ end
 //end
 
 
-public def OnPlayerLCZ()
-    
+public def OnServerRestart()
+    tokill = False
 end
 
 //public def OnPlayerChat(playerid, text)

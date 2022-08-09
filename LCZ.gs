@@ -42,7 +42,7 @@ def StartSuffering()
 end
 
 def Decom()
-    ServerMessage("[FACILITY] LCZ Decontamination Process has started")
+    ServerMessage("[FACILITY] LCZ Decontamination Process has started.")
     StartSuffering()
 end
 
@@ -55,18 +55,18 @@ public def OnPlayerChat()
 end
 
 
-//public def OnScriptLoaded()
-//    print("LCZ Decontamination Feature Mod by Xandromeda#3756 and [REDACTED] loaded!")
-//end
+public def OnScriptLoaded()
+    print("LCZ Decontamination Feature Mod by Xandromeda#3756 and Goodman#4723 loaded!")
+end
 
 
 public def OnServerRestart()
     tokill = False
 end
 
-//public def OnPlayerChat(playerid, text)
+public def OnPlayerChat(playerid, text)
     //if instr(text, "/inj", 1)
-      //  zone = GetPlayerZone(playerid)
+        //zone = GetPlayerZone(playerid)
         //CreateTimer("d1", 3000, 0)
         //SendMessage(playerid, "Current Zone: " + zone)
         //return 0

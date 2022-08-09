@@ -16,11 +16,12 @@ end
 
 def dmg()
     hp = GetPlayerHealth(1)
-    if hp > 0 then
+    if hp > 10 then
         SetPlayerFakeHealth(1,hp-10)
         CreateTimer("dmg",1000, 0)
     else
         SetPlayerType(1,0)
+        ServerMessage(GetPlayerNickname(1)+" was killed by Decontamination Procedure")
     end
 end
 
@@ -37,7 +38,7 @@ end
 
 
 //public def OnScriptLoaded()
-//    print("LCZ Decontamination Feature Mod by Xandromeda#3756 loaded!")
+//    print("LCZ Decontamination Feature Mod by Xandromeda#3756 and [REDACTED] loaded!")
 //end
 
 

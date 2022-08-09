@@ -1,8 +1,16 @@
 #include "includes\multiplayer_core.inc"
 #include "str_util.gs"
 
-public def OnRoundStarted()
-    CreateTimer("d1",1, 0)
+//public def OnRoundStarted()
+//   CreateTimer("d1",1, 0)
+//end
+
+public def OnPlayerConnect()
+   CreateTimer("DecomTimer",1, 0)
+end
+
+def DecomTimer()
+    ServerMessage(format("[FACILITY] LCZ Decontamination Process will occur in T-Minus %d Minutes.",15))
 end
 
 public def OnScriptLoaded()
@@ -10,23 +18,17 @@ public def OnScriptLoaded()
 end
 
 public def d1()
-    for i=1; i<=MAX_PLAYERS; ++i
-    end
-    ServerMessage(playerid, "[FACILITY] LCZ Decontamination Process will occur in T-Minus 15 Minutes.")
+    ServerMessage("[FACILITY] LCZ Decontamination Process will occur in T-Minus 15 Minutes.")
     CreateTimer("d2", 300000, 0)
 end
 
 public def d2()
-    for i=1; i<=MAX_PLAYERS; ++i
-    end
-    SendMessage(playerid, "[FACILITY] LCZ Decontamination Process will occur in T-Minus 10 Minutes.")
+    ServerMessage(playerid, "[FACILITY] LCZ Decontamination Process will occur in T-Minus 10 Minutes.")
     CreateTimer("d3", 300000, 0)
 end
 
 public def d3()
-    for i=1; i<=MAX_PLAYERS; ++i
-    end
-    SendMessage(playerid, "[FACILITY] LCZ Decontamination Process will occur in T-Minus 5 Minutes.")
+    ServerMessage(playerid, "[FACILITY] LCZ Decontamination Process will occur in T-Minus 5 Minutes.")
     CreateTimer("dfinal", 300000, 0)
 end
 

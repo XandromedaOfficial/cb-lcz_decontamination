@@ -32,7 +32,9 @@ end
 
 def StartSuffering()
     for x; x < 65; x++
-        if GetPlayerZone(x) == 1 and tokill == True and GetPlayerType(x) != 0 then
+        role = GetPlayerType(x)
+        if GetPlayerZone(x) == 1 and tokill == True and role != 0 then
+            print(x)
             dmg(x)
         end
     end

@@ -2,17 +2,17 @@
 #include "str_util.gs"
 
 public def OnRoundStarted()
-CreateTimer("d1", 900000, 0)
+    CreateTimer("d1",1, 0)
 end
 
 public def OnScriptLoaded()
-print("LCZ Decontamination Feature Mod by Xandromeda#3756 loaded!")
+    print("LCZ Decontamination Feature Mod by Xandromeda#3756 loaded!")
 end
 
 public def d1()
     for i=1; i<=MAX_PLAYERS; ++i
     end
-    SendMessage(playerid, "[FACILITY] LCZ Decontamination Process will occur in T-Minus 15 Minutes.")
+    ServerMessage(playerid, "[FACILITY] LCZ Decontamination Process will occur in T-Minus 15 Minutes.")
     CreateTimer("d2", 300000, 0)
 end
 
@@ -30,17 +30,16 @@ public def d3()
     CreateTimer("dfinal", 300000, 0)
 end
 
+
 public def OnPlayerLCZ()
     
-
+end
 
 public def OnPlayerChat(playerid, text)
-
     if instr(text, "/inj", 1)
         zone = GetPlayerZone(playerid)
         CreateTimer("d1", 3000, 0)
         SendMessage(playerid, "Current Zone: " + zone)
         return 0
 	end
-
 end

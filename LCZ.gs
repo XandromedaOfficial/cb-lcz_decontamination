@@ -64,7 +64,7 @@ public def OnServerRestart()
     tokill = False
 end
 
-public def OnPlayerChat(playerid, text)
+//public def OnPlayerChat(playerid, text)
     //if instr(text, "/inj", 1)
         //zone = GetPlayerZone(playerid)
         //CreateTimer("d1", 3000, 0)

@@ -4,7 +4,7 @@
 //   CreateTimer("d1",1, 0)
 //end
 
-global tokill = [65,SE_INT]
+global tokill = [64,SE_INT]
 global goahead = False
 
 def dmg(plr)
@@ -21,7 +21,11 @@ def dmg(plr)
 end        
 
 def Suffering()
-    
+    for x; x < 65; x++
+        if GetPlayerZone(1) == 1 then
+            print("step one")
+        end
+    end
 end
 
 def Decom()

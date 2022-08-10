@@ -33,16 +33,9 @@ def Suffering()
             local goahead = True
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
                 for y = 1; y < 65; y++
-<<<<<<< Updated upstream
-                    print("Testing")
-                    if tokill[y] == False then //if not in killing list, MAKE EM SUFFER
-                        print("so whats wrong")
-                        tokill[y] = x
-=======
                     if tokill[y] == x then
                         print(tokill[y])
                         goahead = False
->>>>>>> Stashed changes
                         break
                     end
                 end

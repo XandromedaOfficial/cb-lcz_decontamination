@@ -62,13 +62,54 @@ def DecomTimer(mins)
     end
 end
 
+<<<<<<< HEAD
+=======
+def dmg(plr)
+    if GetPlayerZone(plr) != 1 then
+        return
+    end
+    hp = GetPlayerHealth(plr)
+    if hp > 10 then
+        SetPlayerFakeHealth(plr,hp-10)
+        CreateTimer("dmg",1000, 0,plr)
+    else
+        SetPlayerType(plr,0)
+        ServerMessage(GetPlayerNickname(plr)+" was killed by Decontamination Procedure")
+    end
+end        
+
+def StartSuffering()
+    for x; x < 65; x++
+        role = GetPlayerType(x)
+        if GetPlayerZone(x) == 1 and tokill == True and role != 0 then
+            print(x)
+            dmg(x)
+        end
+    end
+    CreateTimer("StartSuffering",5000,0)
+end
+
+def Decom()
+    ServerMessage("[FACILITY] LCZ Decontamination Process has started.")
+    StartSuffering()
+end
+
+public def OnPlayerClickButton()
+    StartSuffering()
+end
+
+>>>>>>> b3f1cbf4b14849284473a64253a13d920cbf1bc3
 public def OnPlayerChat()
     CreateTimer("DecomTimer",1, 0, 15)
 end
 
 
 public def OnScriptLoaded()
+<<<<<<< HEAD
     print("LCZ Decontamination Feature Mod by Xandromeda#3756 and [REDACTED] loaded!")
+=======
+    print("LCZ Decontamination Feature Mod by Xandromeda#3756 and Goodman#4723 loaded!")
+>>>>>>> b3f1cbf4b14849284473a64253a13d920cbf1bc3
 end
 
 

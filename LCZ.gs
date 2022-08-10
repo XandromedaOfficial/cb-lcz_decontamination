@@ -29,29 +29,36 @@ end
 
 def Suffering()
     for x = 1; x < 65; x++
-        local goahead = True
-        if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
-            for y = 1; y < 65; y++
-                if tokill[y] == x then
-                    print(tokill[y])
-                    goahead = False
-                    break
-                end
-            end
-            print("made it this far")
-            if goahead == True then
+        if IsPlayerConnected(x) == 1 then
+            local goahead = True
+            if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
                 for y = 1; y < 65; y++
+<<<<<<< Updated upstream
                     print("Testing")
                     if tokill[y] == False then //if not in killing list, MAKE EM SUFFER
                         print("so whats wrong")
                         tokill[y] = x
+=======
+                    if tokill[y] == x then
+                        print(tokill[y])
+                        goahead = False
+>>>>>>> Stashed changes
                         break
                     end
                 end
-                dmg(x)
+                print("made it this far")
+                if goahead == True then
+                    for y = 1; y < 65; y++
+                        if tokill[y] == False then //if not in killing list, MAKE EM SUFFER
+                            tokill[y] = x
+                            break
+                        end
+                    end
+                    dmg(x)
+                end
             end
+            goahead = nil
         end
-        goahead = nil
     end
     CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
 end

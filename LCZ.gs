@@ -9,7 +9,8 @@ global tokill = [64,SE_INT]
 def dmg(plr)
     if GetPlayerZone(plr) != 1 then
         for y = 1; y < 65;y++
-            if tokill[y] == plr then
+            check = tokill[y]
+            if check == plr then
                 tokill[y] = 0
                 return
             end

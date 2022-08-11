@@ -6,12 +6,6 @@
 
 global tokill = [64,SE_INT]
 
-public def OnServerStart()
-    for x; x < 65;x++
-        tokill[x] = 0
-    end
-end
-
 def dmg(plr)
     if GetPlayerZone(plr) != 1 then
         for y = 1; y < 65;y++
@@ -39,7 +33,8 @@ def Suffering()
             local goahead = True
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
                 for y = 1; y < 65; y++
-                    if tokill[y] == x then
+                    check = tokill[y]
+                    if check == x then
                         print(x)
                         print(tokill[y])
                         goahead = False

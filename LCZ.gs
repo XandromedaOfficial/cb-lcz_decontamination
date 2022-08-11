@@ -10,7 +10,7 @@ def dmg(plr)
     if GetPlayerZone(plr) != 1 then
         for y = 1; y < 65;y++
             if tokill[y] == plr then
-                tokill[y] = False
+                tokill[y] = 0
                 return
             end
         end

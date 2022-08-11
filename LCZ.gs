@@ -34,7 +34,7 @@ def Suffering()
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
                 for y = 1; y < 65; y++
                     if tokill[y] == x then
-                        print(tokill[y])
+                        print(x)
                         goahead = False
                         break
                     end

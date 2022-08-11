@@ -42,7 +42,7 @@ def Suffering()
                 print("made it this far")
                 if goahead == True then
                     for y = 1; y < 65; y++
-                        if tokill[y] == False then //if not in killing list, MAKE EM SUFFER
+                        if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
                             print("Suffering")
                             tokill[y] = x
                             break

@@ -7,7 +7,7 @@
 global tokill = [64,SE_INT]
 
 def dmg(plr)
-    if GetPlayerZone != 1 then
+    if GetPlayerZone(plr) != 1 then
         for y = 1; y < 65;y++
             if tokill[y] == plr then
                 tokill[y] = False
@@ -22,7 +22,7 @@ def dmg(plr)
     else 
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr,0)
-            ServerMessage(GetPlayerNickname(plr)+" suffocated due to decontamination gas")
+            ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
     end
 end        
@@ -43,6 +43,7 @@ def Suffering()
                 if goahead == True then
                     for y = 1; y < 65; y++
                         if tokill[y] == False then //if not in killing list, MAKE EM SUFFER
+                            print("Suffering")
                             tokill[y] = x
                             break
                         end

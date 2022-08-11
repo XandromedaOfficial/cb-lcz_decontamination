@@ -41,6 +41,7 @@ def Suffering()
                 for y = 1; y < 65; y++
                     if tokill[y] == x then
                         print(x)
+                        print(tokill[y])
                         goahead = False
                         break
                     end

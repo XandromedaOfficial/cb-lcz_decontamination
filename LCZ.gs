@@ -7,7 +7,7 @@
 global tokill = [64,SE_INT]
 
 def OnServerStart()
-    for x; x < len(tokill);x++
+    for x; x < 65;x++
         tokill[x] = 0
     end
 end

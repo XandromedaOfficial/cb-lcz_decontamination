@@ -5,7 +5,7 @@ global letsgo = False
 
 def dmg(plr,dmgpo)
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then
-        for y = 1; y < 65;y++
+        for y = 1; y < len tokill;y++
             check = tokill[y]
             if check == plr then
                 tokill[y] = 0
@@ -21,6 +21,13 @@ def dmg(plr,dmgpo)
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr,0)
             ServerMessage(GetPlayerNickname(plr)+" suffocated during decontamination process")
+            for y = 1; y < len tokill;y++
+                check = tokill[y]
+                if check == plr then
+                    tokill[y] = 0
+                    break
+                end
+            end
         end
     end
 end        
@@ -31,7 +38,7 @@ def Suffering()
             if IsPlayerConnected(x) == 1 then
                 local goahead = True
                 if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
-                    for y = 1; y < len tokill; y++
+                    for y = 1; y <= len tokill; y++
                         check = tokill[y]
                         if check == x then
                             print(x)
@@ -42,7 +49,7 @@ def Suffering()
                     end
                     print("made it this far")
                     if goahead == True then
-                        for y = 1; y < len tokill; y++
+                        for y = 1; y <= len tokill; y++
                             check = tokill[y]
                             if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
                                 print("Suffering")
@@ -59,6 +66,10 @@ def Suffering()
             end
         end
         CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
+    else
+        for x; x <= len tokill; x++
+            tokill[x] = 0
+        end
     end
 end
 

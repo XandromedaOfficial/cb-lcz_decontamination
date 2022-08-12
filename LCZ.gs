@@ -16,7 +16,7 @@ def dmg(plr,dmgpo)
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
         SetPlayerFakeHealth(plr,hp-dmgpo)
-        CreateTimer("dmg",1000, 0,plr)
+        CreateTimer("dmg",1000, 0,plr,dmgpo)
     else 
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr,0)

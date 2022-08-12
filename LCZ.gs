@@ -1,6 +1,7 @@
 #include "includes\multiplayer_core.inc"
 
 global tokill = [64,SE_INT]
+global letsgo = False
 
 def dmg(plr,dmgpo)
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then
@@ -19,7 +20,7 @@ def dmg(plr,dmgpo)
     else 
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr,0)
-            ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
+            ServerMessage(GetPlayerNickname(plr)+" suffocated during decontamination process")
         end
     end
 end        

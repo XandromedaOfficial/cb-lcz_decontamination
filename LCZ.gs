@@ -1,9 +1,5 @@
 #include "includes\multiplayer_core.inc"
 
-//public def OnRoundStarted()
-//   CreateTimer("d1",1, 0)
-//end
-
 global tokill = [64,SE_INT]
 
 def dmg(plr)

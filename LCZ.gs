@@ -25,40 +25,43 @@ def dmg(plr)
 end        
 
 def Suffering()
-    for x = 1; x < 65; x++
-        if IsPlayerConnected(x) == 1 then
-            local goahead = True
-            if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
-                for y = 1; y < 65; y++
-                    check = tokill[y]
-                    if check == x then
-                        print(x)
-                        print(tokill[y])
-                        goahead = False
-                        break
-                    end
-                end
-                print("made it this far")
-                if goahead == True then
+    if letsgo == True then
+        for x = 1; x < 65; x++
+            if IsPlayerConnected(x) == 1 then
+                local goahead = True
+                if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
                     for y = 1; y < len tokill; y++
                         check = tokill[y]
-                        if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
-                            print("Suffering")
-                            tokill[y] = x
+                        if check == x then
+                            print(x)
+                            print(tokill[y])
+                            goahead = False
                             break
                         end
                     end
-                    dmg(x)
+                    print("made it this far")
+                    if goahead == True then
+                        for y = 1; y < len tokill; y++
+                            check = tokill[y]
+                            if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
+                                print("Suffering")
+                                tokill[y] = x
+                                break
+                            end
+                        end
+                        dmg(x)
+                    end
                 end
+                goahead = nil
             end
-            goahead = nil
         end
+        CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
     end
-    CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
 end
 
 def Decom()
     ServerMessage("[FACILITY] LCZ Decontamination Process has started")
+    letsgo = True
     Suffering()
 end
 
@@ -71,6 +74,9 @@ def DecomTimer(mins)
     end
 end
 
+public def OnServerRestart()
+    letsgo = False
+end
 public def OnPlayerChat()
     DecomTimer(15)
 end

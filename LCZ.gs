@@ -2,7 +2,7 @@
 
 global tokill = [64,SE_INT]
 
-def dmg(plr)
+def dmg(plr,dmgpo)
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then
         for y = 1; y < 65;y++
             check = tokill[y]
@@ -13,9 +13,8 @@ def dmg(plr)
         end
     end
     hp = GetPlayerHealth(plr)
-    dmgp = hp*0.1
-    if hp > dmgp then
-        SetPlayerFakeHealth(plr,hp-dmgp)
+    if hp > dmgpo then
+        SetPlayerFakeHealth(plr,hp-dmgpo)
         CreateTimer("dmg",1000, 0,plr)
     else 
         if GetPlayerType(plr) != 0 then
@@ -50,7 +49,9 @@ def Suffering()
                                 break
                             end
                         end
-                        dmg(x)
+                        hp = GetPlayerHealth(x)
+                        dmgp = hp*0.1
+                        dmg(x,dmgp)
                     end
                 end
                 goahead = nil

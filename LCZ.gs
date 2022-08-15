@@ -4,7 +4,13 @@ global tokill = [64,SE_INT]
 global letsgo = False
 
 def erase()
-
+    for y = 1; y < len tokill;y++
+            check = tokill[y]
+            if check == plr then
+                tokill[y] = 0
+                return
+            end
+        end
 end
 
 def dmg(plr,dmgpo)

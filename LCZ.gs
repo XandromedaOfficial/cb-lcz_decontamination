@@ -62,6 +62,7 @@ def Suffering()
                             dmgp = 100
                         else
                             dmgp = 10
+                        end
                         dmg(x,dmgp)
                     end
                 end

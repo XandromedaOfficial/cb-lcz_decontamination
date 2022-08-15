@@ -3,6 +3,10 @@
 global tokill = [64,SE_INT]
 global letsgo = False
 
+def erase()
+
+end
+
 def dmg(plr,dmgpo)
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then
         for y = 1; y < len tokill;y++

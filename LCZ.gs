@@ -18,16 +18,16 @@ def dmg(plr,dmgpo)
         SetPlayerFakeHealth(plr,hp-dmgpo)
         CreateTimer("dmg",1000, 0,plr,dmgpo)
     else 
+         for y = 1; y < len tokill;y++
+            check = tokill[y]
+            if check == plr then
+                tokill[y] = 0
+                break
+            end
+        end
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr,0)
             ServerMessage(GetPlayerNickname(plr)+" suffocated during decontamination process")
-            for y = 1; y < len tokill;y++
-                check = tokill[y]
-                if check == plr then
-                    tokill[y] = 0
-                    break
-                end
-            end
         end
     end
 end        
@@ -37,7 +37,8 @@ def Suffering()
         for x = 1; x < 65; x++
             if IsPlayerConnected(x) == 1 then
                 local goahead = True
-                if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then //check if in killing list
+                role = GetPlayerType(x)
+                if GetPlayerZone(x) == 1 and role != 0 then //check if in killing list
                     for y = 1; y <= len tokill; y++
                         check = tokill[y]
                         if check == x then
@@ -57,8 +58,10 @@ def Suffering()
                                 break
                             end
                         end
-                        hp = GetPlayerHealth(x)
-                        dmgp = hp*0.1
+                        if role > 9 or role == 5 or role == 6 then
+                            dmgp = 100
+                        else
+                            dmgp = 10
                         dmg(x,dmgp)
                     end
                 end
@@ -91,6 +94,7 @@ end
 public def OnServerRestart()
     letsgo = False
 end
+
 public def OnPlayerChat()
-    DecomTimer(15)
+    CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end

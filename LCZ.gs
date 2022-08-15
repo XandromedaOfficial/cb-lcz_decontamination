@@ -1,7 +1,7 @@
 #include "includes\multiplayer_core.inc"
 
-global tokill = [64,SE_INT]
-global letsgo = False
+global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
+global letsgo = False //debounce (var switch)
 
 def erase(what)
     for y = 1; y < len tokill;y++
@@ -24,12 +24,12 @@ def dmg(plr,dmgpo)
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
         SetPlayerFakeHealth(plr,hp-dmgpo)
-        CreateTimer("dmg",1000, 0,plr,dmgpo)
+        CreateTimer("dmg", 1000, 0, plr, dmgpo)
     else 
         erase(plr)
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr,0)
-            ServerMessage(GetPlayerNickname(plr)+" suffocated during decontamination process")
+            ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
     end
 end        

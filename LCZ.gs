@@ -94,6 +94,6 @@ public def OnServerRestart()
     letsgo = False
 end
 
-public def OnPlayerChat()
+public def OnPlayerChat() //Change to OnRoundStarted once development is complete
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end

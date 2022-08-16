@@ -8,18 +8,14 @@ def erase(what)
         check = tokill[y]
         if check == what then
             tokill[y] = 0
-            return True
         end
     end
-    return False
 end
 
 def dmg(plr,dmgpo)
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then
-        delete = erase(plr)
-        if delete == True then
-            return
-        end
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or letsgo == False then
+        erase(plr)
+        return
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -32,7 +28,7 @@ def dmg(plr,dmgpo)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
     end
-end        
+end
 
 def Suffering()
     if letsgo == True then
@@ -48,7 +44,7 @@ def Suffering()
                             break
                         end
                     end
-                    if goahead == True then
+                    if goahead == True then //if not in killing list, run this
                         for y = 1; y <= len tokill; y++
                             check = tokill[y]
                             if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
@@ -56,12 +52,12 @@ def Suffering()
                                 break
                             end
                         end
-                        if role > 9 or role == 5 or role == 6 then
-                            dmgp = 100
+                        if role > 9 or role == 5 or role == 6 then //if SCP
+                            dmgp = 100 //SCP Damage
                         else
-                            dmgp = 10
+                            dmgp = 10 //Human Damage
                         end
-                        dmg(x,dmgp)
+                        dmg(x,dmgp) //dmg them
                     end
                 end
                 goahead = nil
@@ -69,7 +65,7 @@ def Suffering()
         end
         CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
     else
-        for x; x <= len tokill;x++
+        for x; x <= len tokill;x++ //game end, clear list
             tokill[x] = 0
         end
     end
@@ -91,7 +87,7 @@ def DecomTimer(mins)
 end
 
 public def OnServerRestart()
-    letsgo = False
+    letsgo = False //so rest of script knows game end
 end
 
 public def OnPlayerChat() //Change to OnRoundStarted once development is complete

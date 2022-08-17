@@ -8,6 +8,7 @@ def erase(what)
         check = tokill[y]
         if check == what then
             tokill[y] = 0
+            return
         end
     end
 end
@@ -65,9 +66,7 @@ def Suffering()
         end
         CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
     else
-        for x; x <= len tokill;x++ //game end, clear list
-            tokill[x] = 0
-        end
+        tokill = [64,SE_INT]
     end
 end
 
@@ -80,9 +79,9 @@ end
 def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     if mins > 5 then
-        CreateTimer("DecomTimer",10, 0, mins-5) //CHANGE!
+        CreateTimer("DecomTimer",60*mins, 0, mins-5) //CHANGE!
     else
-        CreateTimer("Decom",10, 0) //CHANGE!
+        CreateTimer("Decom",60*mins, 0) //CHANGE!
     end
 end
 

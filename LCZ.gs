@@ -81,7 +81,7 @@ def DecomTimer(mins)
     for x; x < 65;x++
         zone = GetPlayerZone(x)
         if zone == 1 then
-            PlaySound(x,SFX/Alarm/Alarm3.ogg)
+            PlaySound(x,"SFX/Alarm/Alarm3.ogg")
         end
     end
     if mins > 5 then

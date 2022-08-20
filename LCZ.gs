@@ -78,6 +78,12 @@ end
 
 def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
+    for x; x < 65;x++
+        zone = GetPlayerZone(x)
+        if zone == 1 then
+            PlaySound(x,SFX/Alarm/Alarm3.ogg)
+        end
+    end
     if mins > 5 then
         CreateTimer("DecomTimer",60*mins, 0, mins-5) //CHANGE!
     else

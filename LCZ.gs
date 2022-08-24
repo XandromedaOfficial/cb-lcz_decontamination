@@ -15,11 +15,12 @@ end
 
 def dmg(plr,dmgpo)
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or letsgo == False then
+        SetPlayerFogRange(x,10)
         erase(plr)
         return
     end
     if dmgpo == 10 then
-        PlaySound(plr,"SFX/Characters/D9341/Cough1.ogg")
+        PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -31,6 +32,13 @@ def dmg(plr,dmgpo)
             SetPlayerType(plr,0)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
+    end
+end
+
+def sound()
+    if letsgo == True then
+        CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 55, 1.5)
+        CreateTimer("sound",1000,0)
     end
 end
 
@@ -61,6 +69,7 @@ def Suffering()
                         else
                             dmgp = 10 //Human Damage
                         end
+                        SetPlayerFogRange(x,3)
                         dmg(x,dmgp) //dmg them
                     end
                 end
@@ -77,6 +86,7 @@ end
 
 def Decom()
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
+    sound()
     letsgo = True
     Suffering()
 end
@@ -88,7 +98,6 @@ def DecomTimer(mins)
         CreateTimer("DecomTimer",60*mins, 0, mins-5) //CHANGE!
     else
         CreateTimer("Decom",60*mins, 0) //CHANGE!
-        CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 55, 1.5)
     end
 end
 

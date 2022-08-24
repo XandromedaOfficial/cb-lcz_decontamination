@@ -18,6 +18,9 @@ def dmg(plr,dmgpo)
         erase(plr)
         return
     end
+    if dmgpo == 10 then
+        PlaySound(plr,"SFX/Characters/D9341/Cough1.ogg")
+    end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
         SetPlayerFakeHealth(plr,hp-dmgpo)
@@ -85,6 +88,7 @@ def DecomTimer(mins)
         CreateTimer("DecomTimer",60*mins, 0, mins-5) //CHANGE!
     else
         CreateTimer("Decom",60*mins, 0) //CHANGE!
+        CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 55, 1.5)
     end
 end
 

@@ -37,7 +37,7 @@ end
 
 def sound()
     if letsgo == True then
-        CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 55, 1.5)
+        CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 50, 1.5)
         CreateTimer("sound",1000,0)
     end
 end

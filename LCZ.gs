@@ -85,7 +85,7 @@ end
 
 //Start coords: 72,0,133
 
-def Decom()
+def Decom() 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound()
     letsgo = True

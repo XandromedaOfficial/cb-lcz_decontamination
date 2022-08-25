@@ -20,7 +20,8 @@ def dmg(plr,dmgpo)
         return
     end
     if dmgpo == 10 then
-        PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
+        rand = rand(1,3)
+        CreateTimer("cough",rand*1000,0)
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -33,6 +34,10 @@ def dmg(plr,dmgpo)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
     end
+end
+
+def cough()
+    PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
 end
 
 def sound()

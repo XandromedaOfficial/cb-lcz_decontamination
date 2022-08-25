@@ -21,7 +21,7 @@ def dmg(plr,dmgpo)
     end
     if dmgpo == 10 then
         rand = rand(1,3)
-        CreateTimer("cough",rand*1000,0)
+        CreateTimer("PlaySound",rand*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -34,10 +34,6 @@ def dmg(plr,dmgpo)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
     end
-end
-
-def cough()
-    PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
 end
 
 def sound()
@@ -81,7 +77,7 @@ def Suffering()
                 goahead = nil
             end
         end
-        CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
+        //CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
     else
         tokill = [64,SE_INT]
     end
@@ -93,7 +89,7 @@ def Decom()
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound()
     letsgo = True
-    Suffering()
+    suffer = CreateTimer("Suffering",5000,1)
 end
 
 def DecomTimer(mins)

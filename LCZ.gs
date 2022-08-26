@@ -21,19 +21,17 @@ def cough(plr)
     PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
 end
 
-def dmg(plr,dmgpo) //damage plrs in LCZ
+def dmg(plr,dmgpo, coughtimer) //damage plrs in LCZ
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then        
+        RemoveTimer(coughtimer)
         erase(plr)
         return
     end
     local hp
-    if dmgpo == 10 then
-        CreateTimer("cough",4000,0,plr)
-    end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
-        GivePlayerHealth(-1*dmgpo)
-        CreateTimer("dmg", 1000, 0, plr, dmgpo) //Doesn't use regular loop parameter cause would need more space
+        GivePlayerHealth(plr,-1*dmgpo)
+        CreateTimer("dmg", 1000, 0, plr, dmgpo,coughtimer) //Doesn't use regular loop parameter cause would need more space
     else 
         erase(plr)
         if GetPlayerType(plr) != 0 then
@@ -70,9 +68,10 @@ def Suffering() //detect plrs in LCZ
                         role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
                         role = 10 //Human Damage
+                        coughtimer = CreateTimer("cough",3000,1,x)
                     end
                     SetPlayerFogRange(x,3)
-                    dmg(x,role) //dmg them
+                    dmg(x,role,coughttimer) //dmg them
                 end
             end            
         end
@@ -83,7 +82,7 @@ end
 //Start coords: 72,0,133
 
 def gas()
-    CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 50, 1.5)
+    CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 60, 1.5)
 end
 
 def Decom() 
@@ -96,9 +95,9 @@ def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
     if mins > 5 then
-        CreateTimer("DecomTimer", 300000, 0, mins-5)
+        CreateTimer("DecomTimer", 3000, 0, mins-5)
     else
-        CreateTimer("Decom", 300000, 0)
+        CreateTimer("Decom", 3000, 0)
     end
 end
 
@@ -108,6 +107,6 @@ public def OnServerRestart()
     tokill = [64,SE_INT]
 end
 
-public def OnRoundStarted()
+public def OnPlayerChat()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end

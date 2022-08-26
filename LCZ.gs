@@ -1,6 +1,8 @@
 #include "includes\multiplayer_core.inc"
 
 global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
+global sound
+global suffer
 
 def erase(what)
     local check
@@ -15,6 +17,10 @@ def erase(what)
     check = nil
 end
 
+def cough(plr)
+    PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
+end
+
 def dmg(plr,dmgpo) //damage plrs in LCZ
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then        
         erase(plr)
@@ -22,7 +28,7 @@ def dmg(plr,dmgpo) //damage plrs in LCZ
     end
     local hp
     if dmgpo == 10 then
-        CreateTimer("PlaySound",rand(1,3)*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
+        CreateTimer("cough",rand(2,6)*1000,0,plr)
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -75,9 +81,13 @@ end
 
 //Start coords: 72,0,133
 
+def gas()
+    CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 50, 1.5)
+end
+
 def Decom() 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
-    sound = CreateTimer("CreateSound",1000,1,"SFX/General/Hiss.ogg",72, 0, 133, 50, 1.5)
+    sound = CreateTimer("gas",1000,1)
     suffer = CreateTimer("Suffering",5000,1)
 end
 
@@ -92,6 +102,7 @@ def DecomTimer(mins)
 end
 
 public def OnServerRestart()
+    print("lego")
     RemoveTimer(suffer)
     RemoveTimer(sound)
     tokill = [64,SE_INT]

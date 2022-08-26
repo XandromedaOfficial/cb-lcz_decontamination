@@ -4,6 +4,8 @@ global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
 global letsgo = False //debounce (var switch)
 
 def erase(what)
+    local check
+    SetPlayerFogRange(what,10)
     for y = 1; y < len tokill;y++
         check = tokill[y]
         if check == what then
@@ -11,11 +13,11 @@ def erase(what)
             return
         end
     end
+    check = nil
 end
 
-def dmg(plr,dmgpo,id) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or letsgo == False then
-        SetPlayerFogRange(x,10)
+def dmg(plr,dmgpo) //damage plrs in LCZ
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or letsgo == False then        
         erase(plr)
         return
     end

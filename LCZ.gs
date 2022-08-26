@@ -1,7 +1,6 @@
 #include "includes\multiplayer_core.inc"
 
 global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
-global letsgo = False //debounce (var switch)
 
 def erase(what)
     local check
@@ -17,7 +16,7 @@ def erase(what)
 end
 
 def dmg(plr,dmgpo) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or letsgo == False then        
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then        
         erase(plr)
         return
     end
@@ -80,7 +79,6 @@ end
 def Decom() 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound = CreateTimer("CreateSound",1000,1,"SFX/General/Hiss.ogg",72, 0, 133, 50, 1.5)
-    letsgo = True
     suffer = CreateTimer("Suffering",5000,1)
 end
 
@@ -98,7 +96,6 @@ public def OnServerRestart()
     RemoveTimer(suffer)
     RemoveTimer(sound)
     tokill = [64,SE_INT]
-    letsgo = False //so rest of script knows game end
 end
 
 public def OnPlayerChat() //Change to OnRoundStarted once development is complete

@@ -28,12 +28,12 @@ def dmg(plr,dmgpo) //damage plrs in LCZ
     end
     local hp
     if dmgpo == 10 then
-        CreateTimer("cough",rand(2,6)*1000,0,plr)
+        CreateTimer("cough",3000,0,plr)
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
         SetPlayerFakeHealth(plr,hp-dmgpo)
-        CreateTimer("dmg", 1000, 0, plr, dmgpo)
+        CreateTimer("dmg", 1000, 0, plr, dmgpo) //Doesn't use regular loop parameter cause would need more space
     else 
         erase(plr)
         if GetPlayerType(plr) != 0 then
@@ -48,7 +48,7 @@ def Suffering() //detect plrs in LCZ
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
             local goahead = True
-            role = GetPlayerType(x)
+            local role = GetPlayerType(x)
             if GetPlayerZone(x) == 1 and role != 0 then //check if in killing list
                 for y = 1; y <= len tokill; y++
                     check = tokill[y]
@@ -67,15 +67,16 @@ def Suffering() //detect plrs in LCZ
                         end
                     end
                     if role > 9 or role == 5 or role == 6 then //if SCP
-                        dmgp = 100 //SCP Damage
+                        role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
-                        dmgp = 10 //Human Damage
+                        role = 10 //Human Damage
                     end
                     SetPlayerFogRange(x,3)
-                    dmg(x,dmgp) //dmg them
+                    dmg(x,role) //dmg them
                 end
             end            
         end
+        role = nil
     end
 end
 
@@ -87,7 +88,7 @@ end
 
 def Decom() 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
-    sound = CreateTimer("gas",1000,1)
+    sound = CreateTimer("gas",1500,1)
     suffer = CreateTimer("Suffering",5000,1)
 end
 
@@ -95,9 +96,9 @@ def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
     if mins > 5 then
-        CreateTimer("DecomTimer",60*mins, 0, mins-5) //CHANGE!
+        CreateTimer("DecomTimer", 300, 0, mins-5) //CHANGE!
     else
-        CreateTimer("Decom",60*mins, 0) //CHANGE!
+        CreateTimer("Decom", 300, 0) //CHANGE!
     end
 end
 

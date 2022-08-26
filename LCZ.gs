@@ -102,7 +102,6 @@ def DecomTimer(mins)
 end
 
 public def OnServerRestart()
-    print("lego")
     RemoveTimer(suffer)
     RemoveTimer(sound)
     tokill = [64,SE_INT]

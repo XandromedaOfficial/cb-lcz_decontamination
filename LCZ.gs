@@ -21,9 +21,9 @@ def dmg(plr,dmgpo) //damage plrs in LCZ
         erase(plr)
         return
     end
+    local hp
     if dmgpo == 10 then
-        rand = rand(1,3)
-        CreateTimer("PlaySound",rand*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
+        CreateTimer("PlaySound",rand(1,3)*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -36,6 +36,7 @@ def dmg(plr,dmgpo) //damage plrs in LCZ
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
     end
+    hp = nil
 end
 
 def Suffering() //detect plrs in LCZ

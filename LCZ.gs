@@ -68,10 +68,10 @@ def Suffering() //detect plrs in LCZ
                         role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
                         role = 10 //Human Damage
-                        coughtimer = CreateTimer("cough",3000,1,x)
+                        timer = CreateTimer("cough",4000,1,x)
                     end
                     SetPlayerFogRange(x,3)
-                    dmg(x,role,coughttimer) //dmg them
+                    dmg(x,role,timer) //dmg them
                 end
             end            
         end

@@ -28,11 +28,11 @@ def dmg(plr,dmgpo) //damage plrs in LCZ
     end
     local hp
     if dmgpo == 10 then
-        CreateTimer("cough",3000,0,plr)
+        CreateTimer("cough",4000,0,plr)
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
-        SetPlayerFakeHealth(plr,hp-dmgpo)
+        GivePlayerHealth(-1*dmgpo)
         CreateTimer("dmg", 1000, 0, plr, dmgpo) //Doesn't use regular loop parameter cause would need more space
     else 
         erase(plr)

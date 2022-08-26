@@ -52,6 +52,7 @@ def Suffering() //detect plrs in LCZ
                     end
                 end
                 if goahead == True then //if not in killing list, run this
+                    goahead = nil
                     for y = 1; y <= len tokill; y++
                         check = tokill[y]
                         if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
@@ -67,11 +68,9 @@ def Suffering() //detect plrs in LCZ
                     SetPlayerFogRange(x,3)
                     dmg(x,dmgp) //dmg them
                 end
-            end
-            goahead = nil
+            end            
         end
     end
-    //CreateTimer("Suffering",5000,0) //Repeat the endless cycle of suffering
 end
 
 //Start coords: 72,0,133

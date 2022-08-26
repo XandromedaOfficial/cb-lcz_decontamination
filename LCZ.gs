@@ -4,6 +4,7 @@ global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
 global letsgo = False //debounce (var switch)
 
 def erase(what)
+    SetPlayerFogRange(x,10)
     for y = 1; y < len tokill;y++
         check = tokill[y]
         if check == what then
@@ -15,13 +16,12 @@ end
 
 def dmg(plr,dmgpo)
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or letsgo == False then
-        SetPlayerFogRange(x,10)
         erase(plr)
         return
     end
     if dmgpo == 10 then
         rand = rand(1,3)
-        CreateTimer("cough",rand*1000,0)
+        CreateTimer("PlaySound",rand*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -34,10 +34,6 @@ def dmg(plr,dmgpo)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
     end
-end
-
-def cough()
-    PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
 end
 
 def sound()
@@ -92,8 +88,8 @@ end
 def Decom()
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound()
+    suffering()
     letsgo = True
-    Suffering()
 end
 
 def DecomTimer(mins)

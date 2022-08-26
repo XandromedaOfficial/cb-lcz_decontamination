@@ -19,9 +19,8 @@ def dmg(plr,dmgpo)
         erase(plr)
         return
     end
-    if dmgpo == 10 then
-        rand = rand(1,3)
-        CreateTimer("PlaySound",rand*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
+    if dmgpo == 10 then//if human, cough
+        CreateTimer("PlaySound",rand(1,3)*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then

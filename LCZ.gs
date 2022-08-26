@@ -14,13 +14,20 @@ def erase(what)
     end
 end
 
+def cough(plr)
+    PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
+end
+
 def dmg(plr,dmgpo)
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or letsgo == False then
         erase(plr)
         return
     end
     if dmgpo == 10 then//if human, cough
-        CreateTimer("PlaySound",rand(1,3)*1000,0,plr,"SFX/Character/D9341/Cough1.ogg")
+        rand = rand(2,6)
+        rand = rand*1000
+        print(rand)
+        CreateTimer("cough", rand, 0, plr)
     end
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
@@ -85,10 +92,10 @@ end
 //Start coords: 72,0,133
 
 def Decom()
+    letsgo = True
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound()
     Suffering()
-    letsgo = True
 end
 
 def DecomTimer(mins)

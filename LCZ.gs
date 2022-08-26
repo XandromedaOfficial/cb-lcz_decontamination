@@ -88,7 +88,7 @@ end
 def Decom()
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound()
-    suffering()
+    Suffering()
     letsgo = True
 end
 
@@ -96,9 +96,9 @@ def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
     if mins > 5 then
-        CreateTimer("DecomTimer",60*mins, 0, mins-5) //CHANGE!
+        CreateTimer("DecomTimer", 300, 0, mins-5) //CHANGE!
     else
-        CreateTimer("Decom",60*mins, 0) //CHANGE!
+        CreateTimer("Decom",300, 0) //CHANGE!
     end
 end
 

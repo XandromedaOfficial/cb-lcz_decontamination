@@ -107,7 +107,7 @@ def DecomTimer(mins)
 end
 
 public def OnServerRestart()
-    enddecom
+    enddecom()
 end
 
 def enddecom()

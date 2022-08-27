@@ -26,7 +26,7 @@ def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
         erase(plr)
         return
     end
-    if GetPlayerHealth > dmgpo then
+    if GetPlayerHealth(plr) > dmgpo then
         GivePlayerHealth(plr,-1*dmgpo)
         CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer) //Doesn't use regular loop parameter cause would need more space
     else 
@@ -92,9 +92,9 @@ def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
     if mins > 5 then
-        CreateTimer("DecomTimer", 300000, 0, mins-5)
+        CreateTimer("DecomTimer", 300, 0, mins-5)
     else
-        CreateTimer("Decom", 300000, 0)
+        CreateTimer("Decom", 300, 0)
     end
 end
 

@@ -4,8 +4,9 @@ global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
 global sound
 global suffer
 
-def erase(what)
+def erase(what,coughtimer)
     local check
+    RemoveTimer(coughtimer)
     SetPlayerFogRange(what,8)
     for y = 1; y < len tokill;y++
         check = tokill[y]
@@ -22,20 +23,18 @@ end
 
 def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 then   
-        RemoveTimer(coughtimer)
-        erase(plr)
+        erase(plr,coughtimer)
         return
     end
     if GetPlayerHealth(plr) > dmgpo then
         GivePlayerHealth(plr,-1*dmgpo)
         CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer) //Doesn't use regular loop parameter cause would need more space
     else 
+        erase(plr,coughtimer)
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr, 0)
-            erase(plr)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
-        dmg(plr,dmgpo,coughtimer)
     end
 end
 

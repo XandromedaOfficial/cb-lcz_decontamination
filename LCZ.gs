@@ -100,9 +100,9 @@ def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
     if mins > 5 then
-        CreateTimer("DecomTimer", 3000, 0, mins-5)
+        CreateTimer("DecomTimer", 300000, 0, mins-5)
     else
-        CreateTimer("Decom", 3000, 0)
+        CreateTimer("Decom", 300000, 0)
     end
 end
 
@@ -112,6 +112,6 @@ public def OnServerRestart()
     tokill = [64,SE_INT]
 end
 
-public def OnPlayerChat()
+public def OnRoundStarted()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end

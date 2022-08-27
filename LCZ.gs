@@ -6,7 +6,7 @@ global suffer
 
 def erase(what)
     local check
-    SetPlayerFogRange(what,10)
+    SetPlayerFogRange(what,8)
     for y = 1; y < len tokill;y++
         check = tokill[y]
         if check == what then
@@ -21,8 +21,8 @@ def cough(plr)
     PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
 end
 
-def dmg(plr,dmgpo, coughtimer) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then        
+def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then   
         RemoveTimer(coughtimer)
         erase(plr)
         return
@@ -31,15 +31,18 @@ def dmg(plr,dmgpo, coughtimer) //damage plrs in LCZ
     hp = GetPlayerHealth(plr)
     if hp > dmgpo then
         GivePlayerHealth(plr,-1*dmgpo)
-        CreateTimer("dmg", 1000, 0, plr, dmgpo,coughtimer) //Doesn't use regular loop parameter cause would need more space
+        CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer) //Doesn't use regular loop parameter cause would need more space
     else 
-        erase(plr)
-        if GetPlayerType(plr) != 0 then
-            SetPlayerType(plr,0)
+        if role != 0 then
+            SetPlayerType(plr, 0)
+            erase(plr)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
         end
+        dmg(plr,dmgpo,coughtimer)
     end
     hp = nil
+    zone = nil
+    role = nil
 end
 
 def Suffering() //detect plrs in LCZ
@@ -68,10 +71,11 @@ def Suffering() //detect plrs in LCZ
                         role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
                         role = 10 //Human Damage
-                        timer = CreateTimer("cough",4000,1,x)
+                        local timer = CreateTimer("cough",3000,1,x)
                     end
                     SetPlayerFogRange(x,3)
                     dmg(x,role,timer) //dmg them
+                    timer = nil
                 end
             end            
         end
@@ -82,12 +86,13 @@ end
 //Start coords: 72,0,133
 
 def gas()
-    CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 60, 1.5)
+    CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4)
 end
 
-def Decom() 
+def Decom()
+    CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
-    sound = CreateTimer("gas",1500,1)
+    sound = CreateTimer("gas",500,1)
     suffer = CreateTimer("Suffering",5000,1)
 end
 

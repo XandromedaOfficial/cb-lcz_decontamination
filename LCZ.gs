@@ -118,7 +118,7 @@ public def OnPlayerConsole(plr,msg) //Use console to immediately activate decom 
     if msg == "decom" then
         Decom()
     end
-    if msg == "enddecom" then //use console to shutdown decom (any players in LCZ will continue to take dmg while in LCZ)
+    if msg == "enddecom" then //use console to shutdown decom
         enddecom()
     end
 end

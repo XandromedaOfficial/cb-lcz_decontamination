@@ -21,7 +21,7 @@ def cough(plr)
 end
 
 def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 then   
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 then   
         RemoveTimer(coughtimer)
         erase(plr)
         return
@@ -106,6 +106,7 @@ end
 def enddecom()
     RemoveTimer(suffer)
     RemoveTimer(sound)
+    suffer = 0
     tokill = [64,SE_INT]
 end 
 

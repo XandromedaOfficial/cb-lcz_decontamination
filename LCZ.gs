@@ -107,11 +107,24 @@ def DecomTimer(mins)
 end
 
 public def OnServerRestart()
+    enddecom
+end
+
+def enddecom()
     RemoveTimer(suffer)
     RemoveTimer(sound)
     tokill = [64,SE_INT]
-end
+end 
 
 public def OnRoundStarted()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
+end
+
+public def OnPlayerConsole(plr,msg) //Use console to immediately activate decom procedure
+    if msg == "decom" then
+        Decom()
+    end
+    if msg == "enddecom" then //use console to shutdown decom (any players in LCZ will continue to take dmg while in LCZ)
+        enddecom()
+    end
 end

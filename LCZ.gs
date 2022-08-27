@@ -14,7 +14,6 @@ def erase(what)
             return
         end
     end
-    check = nil
 end
 
 def cough(plr)
@@ -27,8 +26,7 @@ def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
         erase(plr)
         return
     end
-    local hp
-    hp = GetPlayerHealth(plr)
+    local hp = GetPlayerHealth(plr)
     if hp > dmgpo then
         GivePlayerHealth(plr,-1*dmgpo)
         CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer) //Doesn't use regular loop parameter cause would need more space
@@ -40,9 +38,6 @@ def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
         end
         dmg(plr,dmgpo,coughtimer)
     end
-    hp = nil
-    zone = nil
-    role = nil
 end
 
 def Suffering() //detect plrs in LCZ
@@ -75,11 +70,9 @@ def Suffering() //detect plrs in LCZ
                     end
                     SetPlayerFogRange(x,3)
                     dmg(x,role,timer) //dmg them
-                    timer = nil
                 end
             end            
         end
-        role = nil
     end
 end
 

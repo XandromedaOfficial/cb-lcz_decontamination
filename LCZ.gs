@@ -26,12 +26,11 @@ def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
         erase(plr)
         return
     end
-    local hp = GetPlayerHealth(plr)
-    if hp > dmgpo then
+    if GetPlayerHealth > dmgpo then
         GivePlayerHealth(plr,-1*dmgpo)
         CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer) //Doesn't use regular loop parameter cause would need more space
     else 
-        if role != 0 then
+        if GetPlayerType(plr) != 0 then
             SetPlayerType(plr, 0)
             erase(plr)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")

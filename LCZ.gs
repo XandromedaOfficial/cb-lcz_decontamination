@@ -93,6 +93,7 @@ def DecomTimer(mins)
     if mins > 5 then
         CreateTimer("DecomTimer", 300000, 0, mins-5)
     else
+        for x = 1;
         CreateTimer("Decom", 300000, 0)
     end
 end

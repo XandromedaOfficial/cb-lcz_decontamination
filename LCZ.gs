@@ -88,18 +88,33 @@ def Decom()
     suffer = CreateTimer("Suffering",5000,1)
 end
 
+def playertext(secs)
+    local mins = 4
+    if secs < 240 then
+        if secs < 180 then 
+            0 
+        end
+    else
+        secs = secs - 240
+    end
+    decomtext = "LCZ Decontamination win begin in " + Str(mins) + ":" + Str(secs)
+    for x = 1; x < 65; x++
+        if IsPlayerConnected(x) then
+            if GetPlayerZone(x) == 1 then
+                CreatePlayerText(x, decomtext)
+            end
+        end
+    end
+end
+
 def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
     if mins > 5 then
-        CreateTimer("DecomTimer", 300000, 0, mins-5)
+        CreateTimer("DecomTimer", 300, 0, mins-5)
     else
-        for x = 1; x < 65; x++
-            if IsPlayerConnected(x) then
-
-            end
-        end
-        CreateTimer("Decom", 300000, 0)
+        playertext()
+        CreateTimer("Decom", 300, 0)
     end
 end
 
@@ -114,7 +129,7 @@ def enddecom()
     tokill = [64,SE_INT]
 end 
 
-public def OnRoundStarted()
+public def OnPlayerChat()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 

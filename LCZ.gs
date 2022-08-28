@@ -81,6 +81,7 @@ def gas()
 end
 
 def Decom()
+    enddecom() //end any instance of decom still running
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound = CreateTimer("gas",500,1)
@@ -93,7 +94,11 @@ def DecomTimer(mins)
     if mins > 5 then
         CreateTimer("DecomTimer", 300000, 0, mins-5)
     else
-        for x = 1;
+        for x = 1; x < 65; x++
+            if IsPlayerConnected(x) then
+
+            end
+        end
         CreateTimer("Decom", 300000, 0)
     end
 end

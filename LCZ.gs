@@ -22,7 +22,7 @@ def cough(plr)
 end
 
 def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 or not IsPlayerConnected(plr) then   
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 or IsPlayerConnected(plr) == 0 then   
         RemovePlayerText(plr, text)
         erase(plr,coughtimer)
         return
@@ -47,7 +47,7 @@ end
 
 def Suffering() //detect plrs in LCZ
     for x = 1; x < 65; x++
-        if IsPlayerConnected(x) then
+        if IsPlayerConnected(x) == 1 then
             local goahead = True
             local role = GetPlayerType(x)
             if GetPlayerZone(x) == 1 and role != 0 then //check if in killing list
@@ -112,11 +112,11 @@ def playertext(mins, secs)
         return
     end
     for x = 1; x < 65; x++
-        if IsPlayerConnected(x) then
+        if IsPlayerConnected(x) == 1then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
                 print(decomtext)
                 text = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
-                CreateTimer("wipeout", 1001.4, 0, x, text)
+                CreateTimer("wipeout", 1007, 0, x, text)
             end
         end
     end
@@ -124,7 +124,7 @@ def playertext(mins, secs)
         mins = mins - 1
         secs = 60
     end
-    CreateTimer("playertext", 1001.4, 0, mins, secs-1)
+    CreateTimer("playertext", 1007, 0, mins, secs-1)
 end
 
 def DecomTimer(mins)

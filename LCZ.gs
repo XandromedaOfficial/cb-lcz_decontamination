@@ -2,7 +2,7 @@
 
 global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
 global sound
-global suffer
+global suffer = 0
 
 def erase(what,coughtimer)
     local check
@@ -21,14 +21,21 @@ def cough(plr)
     PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
 end
 
-def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 then   
+def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 or IsPlayerConnected(plr) == False then   
+        RemovePlayerText(plr, text)
         erase(plr,coughtimer)
         return
     end
+    if text == 0 then
+        text = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!", 15, 60, 123400, "DS-DIGITAL.ttf", 50)
+    else
+        RemovePlayerText(plr, text)
+        text = 0
+    end
     if GetPlayerHealth(plr) > dmgpo then
         GivePlayerHealth(plr,-1*dmgpo)
-        CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer) //Doesn't use regular loop parameter cause would need more space
+        CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer, text) //Doesn't use regular loop parameter cause would need more space
     else 
         erase(plr,coughtimer)
         if GetPlayerType(plr) != 0 then
@@ -67,7 +74,7 @@ def Suffering() //detect plrs in LCZ
                         local timer = CreateTimer("cough",3000,1,x)
                     end
                     SetPlayerFogRange(x,3)
-                    dmg(x,role,timer) //dmg them
+                    dmg(x,role,timer,0) //dmg them
                 end
             end            
         end
@@ -93,17 +100,23 @@ def wipeout(plr, text)
 end
 
 def playertext(mins, secs)
-    local decomtext = "LCZ Decontamination will begin in " + mins + ":" + secs
+    local sec
+    if secs < 10 then
+        sec = "0" + secs
+    else
+        sec = secs
+    end
+    local decomtext = "LCZ Decontamination will begin in " + mins + ":" + sec
     local text
     if suffer != 0 then
         return
     end
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) then
-            if GetPlayerZone(x) == 1 and GetPlayerType != 0 then
+            if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
                 print(decomtext)
-                text = CreatePlayerText(x, decomtext, 5, 50,  994020, "DS-DIGITAL.ttf",100)
-                CreateTimer("wipeout", 1000, 0, x, text)
+                text = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
+                CreateTimer("wipeout", 1001.4, 0, x, text)
             end
         end
     end
@@ -111,17 +124,17 @@ def playertext(mins, secs)
         mins = mins - 1
         secs = 60
     end
-    CreateTimer("playertext", 1000, 0, mins, secs-1)
+    CreateTimer("playertext", 1001.4, 0, mins, secs-1)
 end
 
 def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
-    CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
+    CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
     if mins > 5 then
         CreateTimer("DecomTimer", 300, 0, mins-5)
     else
-        playertext(4,59)
-        CreateTimer("Decom", 300, 0)
+        playertext(5,0)
+        CreateTimer("Decom", 340000, 0)
     end
 end
 
@@ -137,7 +150,7 @@ def enddecom()
 end 
 
 public def OnPlayerChat()
-    CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
+    CreateTimer("DecomTimer",0,0,5) //change the first 0 if you want the decom timer to start later
 end
 
 public def OnPlayerConsole(plr,msg) //Use console to immediately activate decom procedure

@@ -88,20 +88,30 @@ def Decom()
     suffer = CreateTimer("Suffering",5000,1)
 end
 
-def playertext(mins, secs)    
-    decomtext = "LCZ Decontamination win begin in " + Str(mins) + ":" + Str(secs)
+def wipeout(plr, text)
+    RemovePlayerText(plr, text)
+end
+
+def playertext(mins, secs)
+    local decomtext = "LCZ Decontamination will begin in " + mins + ":" + secs
+    local text
+    if suffer != 0 then
+        return
+    end
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) then
-            if GetPlayerZone(x) == 1 then
+            if GetPlayerZone(x) == 1 and GetPlayerType != 0 then
                 print(decomtext)
-                CreatePlayerText(x, decomtext, 5, 5,  000000, "serif",20)
+                text = CreatePlayerText(x, decomtext, 5, 50,  994020, "DS-DIGITAL.ttf",100)
+                CreateTimer("wipeout", 1000, 0, x, text)
             end
         end
     end
-    if secs = 0 then
+    if secs == 0 then
         mins = mins - 1
-        secs = 59
+        secs = 60
     end
+    CreateTimer("playertext", 1000, 0, mins, secs-1)
 end
 
 def DecomTimer(mins)
@@ -110,7 +120,7 @@ def DecomTimer(mins)
     if mins > 5 then
         CreateTimer("DecomTimer", 300, 0, mins-5)
     else
-        playertext(4, 59)
+        playertext(4,59)
         CreateTimer("Decom", 300, 0)
     end
 end

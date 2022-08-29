@@ -101,7 +101,8 @@ def playertext(secs)
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) then
             if GetPlayerZone(x) == 1 then
-                CreatePlayerText(x, decomtext)
+                print(decomtext)
+                CreatePlayerText(x, decomtext, 5, 5, 000001, "calibri", 4)
             end
         end
     end
@@ -113,7 +114,7 @@ def DecomTimer(mins)
     if mins > 5 then
         CreateTimer("DecomTimer", 300, 0, mins-5)
     else
-        playertext()
+        playertext(300)
         CreateTimer("Decom", 300, 0)
     end
 end

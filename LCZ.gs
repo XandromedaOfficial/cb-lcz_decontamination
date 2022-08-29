@@ -81,6 +81,7 @@ def gas()
 end
 
 def Decom()
+    enddecom()
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound = CreateTimer("gas",500,1)

@@ -116,7 +116,7 @@ def playertext(mins, secs)
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
                 print(decomtext)
                 text = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
-                CreateTimer("wipeout", 1007, 0, x, text)
+                CreateTimer("wipeout", 1001.4, 0, x, text)
             end
         end
     end
@@ -124,7 +124,7 @@ def playertext(mins, secs)
         mins = mins - 1
         secs = 60
     end
-    CreateTimer("playertext", 1007, 0, mins, secs-1)
+    CreateTimer("playertext", 1001.4, 0, mins, secs-1)
 end
 
 def DecomTimer(mins)

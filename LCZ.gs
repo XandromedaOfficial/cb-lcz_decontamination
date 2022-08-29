@@ -52,6 +52,7 @@ def Suffering() //detect plrs in LCZ
                     end
                 end
                 if goahead == True then //if not in killing list, run this
+                    SendMessage(x, "You are in the decontamination gas. Get out NOW!")
                     goahead = nil
                     for y = 1; y <= len tokill; y++
                         check = tokill[y]

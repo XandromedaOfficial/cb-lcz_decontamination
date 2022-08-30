@@ -66,7 +66,6 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                     end
                 end
                 if goahead == True then //if not in killing list, run this
-                    goahead = nil
                     for y = 1; y <= len tokill; y++
                         check = tokill[y]
                         if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
@@ -78,7 +77,7 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                         role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
                         role = 10 //Human Damage
-                        local timer = CreateTimer("cough",3000,1,x)
+                        role = CreateTimer("cough",3000,1,x)
                     end
                     SetPlayerFogRange(x,3)
                     dmg(x,role,timer,0) //dmg them

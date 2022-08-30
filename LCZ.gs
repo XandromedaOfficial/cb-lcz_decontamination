@@ -47,7 +47,7 @@ def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
     end
 end
 
-def Suffering() //detect plrs in LCZ
+def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
             local goahead = True
@@ -83,8 +83,6 @@ def Suffering() //detect plrs in LCZ
     end
 end
 
-//Start coords: 72,0,133
-
 def gas()
     CreateSound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4)
 end
@@ -114,7 +112,7 @@ def playertext(mins, secs)
     local decomtext = "LCZ Decontamination will begin in " + mins + ":" + sec
     if secs == 0 then
         if mins == 0 then
-            Decom()
+            Decom() //Timer finishes, Suffering begins
             return
         else
             mins = mins - 1

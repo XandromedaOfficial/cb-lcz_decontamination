@@ -24,8 +24,10 @@ def cough(plr)
 end
 
 def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 or IsPlayerConnected(plr) == 0 then   
-        RemovePlayerText(plr, text)
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 then
+        if IsPlayerConnected(plr) == 1 and text != 0 then   
+            RemovePlayerText(plr, text)
+        end
         erase(plr,coughtimer)
         return
     end
@@ -99,15 +101,12 @@ def Decom()
 end
 
 def wipeout(plr, text)
-    if IsPlayerConnected == 1 then
+    if IsPlayerConnected(plr) == 1 then
         RemovePlayerText(plr, text)
     end
 end
 
 def playertext(mins, secs)
-    if suffer != 0 then //if decom starts in some other way, shut down timer
-        return
-    end
     local sec
     if secs < 10 then
         sec = "0" + secs
@@ -123,6 +122,9 @@ def playertext(mins, secs)
             mins = mins - 1
             secs = 60
         end
+    end
+    if suffer != 0 then //if decom starts in some other way, shut down timer
+        return
     end
     CreateTimer("playertext", 1000, 0, mins, secs-1)
     for x = 1; x < 65; x++

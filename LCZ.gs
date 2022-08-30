@@ -99,7 +99,9 @@ def Decom()
 end
 
 def wipeout(plr, text)
-    RemovePlayerText(plr, text)
+    if IsPlayerConnected == 1 then
+        RemovePlayerText(plr, text)
+    end
 end
 
 def playertext(mins, secs)

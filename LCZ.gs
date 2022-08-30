@@ -39,6 +39,7 @@ def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
         GivePlayerHealth(plr,-1*dmgpo)
         CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer, text) //Doesn't use regular loop parameter cause would need more space
     else 
+        RemovePlayerText(plr, text)
         erase(plr,coughtimer)
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr, 0)

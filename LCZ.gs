@@ -77,10 +77,10 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                         role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
                         role = 10 //Human Damage
-                        role = CreateTimer("cough",3000,1,x)
+                        goahead = CreateTimer("cough",3000,1,x)
                     end
                     SetPlayerFogRange(x,3)
-                    dmg(x,role,timer,0) //dmg them
+                    dmg(x,role,goahead,0) //dmg them
                 end
             end            
         end

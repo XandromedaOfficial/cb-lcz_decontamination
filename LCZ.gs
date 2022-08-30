@@ -4,10 +4,10 @@ global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
 global sound
 global suffer
 
-def erase(what,coughtimer)
+def erase(what,coughtimer) //Function to cleanup after plr no longer in LCZ while gas
     local check
     RemoveTimer(coughtimer)
-    if IsPlayerConnected(what) == 1 then
+    if IsPlayerConnected(what) == 1 then //if left by disconnect, dont run this
         SetPlayerFogRange(what,8)
     end 
     for y = 1; y < len tokill;y++
@@ -19,20 +19,20 @@ def erase(what,coughtimer)
     end
 end
 
-def cough(plr)
+def cough(plr) //Give em audible asthma
     PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
 end
 
 def dmg(plr, dmgpo, coughtimer) //damage plrs in LCZ
-    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 or IsPlayerConnected(plr) == 0 then   
-        erase(plr,coughtimer)
+    if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 or IsPlayerConnected(plr) == 0 then   //Bunch of reasons y people shouldn't suffocate
+        erase(plr,coughtimer) //activate cleanup protocol
         return
     end
-    if GetPlayerHealth(plr) > dmgpo then
+    if GetPlayerHealth(plr) > dmgpo then //If a plr's health below dmgpo, then they will be ded next time it comes round.
         GivePlayerHealth(plr,-1*dmgpo)
         CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer) //Doesn't use regular loop parameter cause would need more space
     else 
-        erase(plr,coughtimer)
+        erase(plr,coughtimer) //ded now
         if GetPlayerType(plr) != 0 then
             SetPlayerType(plr, 0)
             ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
@@ -54,7 +54,7 @@ def Suffering() //detect plrs in LCZ
                     end
                 end
                 if goahead == True then //if not in killing list, run this
-                    SetPlayerMessage(x,"You are in the decontamination gas. Get out NOW!")
+                    SetPlayerMessage(x,"You are in the decontamination gas. Get out NOW!") //Doesn't seem to work. Oh well, meant to be placeholder for a better version
                     for y = 1; y <= len tokill; y++
                         check = tokill[y]
                         if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
@@ -66,10 +66,10 @@ def Suffering() //detect plrs in LCZ
                         role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
                         role = 10 //Human Damage
-                        local timer = CreateTimer("cough",3000,1,x)
+                        goahead = CreateTimer("cough",3000,1,x) //No one uses gohead variable now, might as well use it
                     end
                     SetPlayerFogRange(x,3)
-                    dmg(x,role,timer) //dmg them
+                    dmg(x,role,goahead) //dmg them
                 end
             end            
         end
@@ -90,28 +90,28 @@ def Decom()
     suffer = CreateTimer("Suffering",5000,1)
 end
 
-def DecomTimer(mins)
+def DecomTimer(mins) //Facility wide Chat Annoucement every 5 mins from the last 15 mins of no decom. (Make sense of that if u can)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
-    CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
+    CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) //BEEP BEEP, UR GONNA DIE SOON
     if mins > 5 then
-        CreateTimer("DecomTimer", 300000, 0, mins-5)
-    else
+        CreateTimer("DecomTimer", 300000, 0, mins-5) //Repeat function with reduced timer
+    else 
         CreateTimer("Decom", 300000, 0)
     end
 end
 
 public def OnServerRestart()
-    enddecom()
+    enddecom() //End decom if server restarts
 end
 
 def enddecom()
     RemoveTimer(suffer)
-    RemoveTimer(sound)
-    suffer = 0
-    tokill = [64,SE_INT]
+    RemoveTimer(sound) //turn off gas and suffocation procedure
+    suffer = 0 //This variable used to shutdown a lot of other stuff
+    tokill = [64,SE_INT] //clear tokill list
 end 
 
-public def OnRoundStarted()
+public def OnRoundStarted() 
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 

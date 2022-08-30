@@ -108,7 +108,11 @@ end
 
 def playertext(mins, secs)
     local sec
+    local colour = 123456
     if secs < 10 then
+        if mins == 0 then
+            colour = 1530000
+        end              
         sec = "0" + secs
     else
         sec = secs //display variable
@@ -130,8 +134,8 @@ def playertext(mins, secs)
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
-                sec = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
-                CreateTimer("wipeout", 1000, 0, x, sec)
+                sec = CreatePlayerText(x, decomtext, 15, 60,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
+                CreateTimer("wipeout", 1000, 0, x, sec) //remove text
             end
         end
     end

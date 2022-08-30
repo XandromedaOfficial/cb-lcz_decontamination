@@ -7,7 +7,9 @@ global suffer = 0
 def erase(what,coughtimer)
     local check
     RemoveTimer(coughtimer)
-    SetPlayerFogRange(what,8)
+    if IsPlayerConnected(what) == 1 then
+        SetPlayerFogRange(what,8)
+    end
     for y = 1; y < len tokill;y++
         check = tokill[y]
         if check == what then
@@ -28,7 +30,7 @@ def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
         return
     end
     if text == 0 then
-        text = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!", 30, 30, 123400, "DS-DIGITAL.ttf", 50)
+        text = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!", 50, 30, 123400, "DS-DIGITAL.ttf", 50)
     else
         RemovePlayerText(plr, text)
         text = 0
@@ -112,11 +114,11 @@ def playertext(mins, secs)
         return
     end
     for x = 1; x < 65; x++
-        if IsPlayerConnected(x) == 1then
+        if IsPlayerConnected(x) == 1 then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
                 print(decomtext)
                 text = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
-                CreateTimer("wipeout", 1001.4, 0, x, text)
+                CreateTimer("wipeout", 1002, 0, x, text)
             end
         end
     end
@@ -124,7 +126,7 @@ def playertext(mins, secs)
         mins = mins - 1
         secs = 60
     end
-    CreateTimer("playertext", 1001.4, 0, mins, secs-1)
+    CreateTimer("playertext", 1002, 0, mins, secs-1)
 end
 
 def DecomTimer(mins)

@@ -103,14 +103,14 @@ def wipeout(plr, text)
 end
 
 def playertext(mins, secs)
-    if suffer != 0 then
+    if suffer != 0 then //if decom starts in some other way, shut down timer
         return
     end
     local sec
     if secs < 10 then
         sec = "0" + secs
     else
-        sec = secs
+        sec = secs //display variable
     end
     local decomtext = "LCZ Decontamination will begin in " + mins + ":" + sec
     if secs == 0 then
@@ -123,12 +123,11 @@ def playertext(mins, secs)
         end
     end
     CreateTimer("playertext", 1000, 0, mins, secs-1)
-    local text
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
-                text = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
-                CreateTimer("wipeout", 1000, 0, x, text)
+                sec = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
+                CreateTimer("wipeout", 1000, 0, x, sec)
             end
         end
     end
@@ -140,7 +139,7 @@ def DecomTimer(mins)
     if mins > 5 then
         CreateTimer("DecomTimer", 300, 0, mins-5)
     else
-        playertext(5,0)
+        playertext(5,0) //Start timer at 5 mins
     end
 end
 

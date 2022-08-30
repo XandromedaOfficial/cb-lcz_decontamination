@@ -123,8 +123,13 @@ def playertext(mins, secs)
         end
     end
     if secs == 0 then
-        mins = mins - 1
-        secs = 60
+        if mins == 0 then
+            Decom()
+            return
+        else
+            mins = mins - 1
+            secs = 60
+        end
     end
     CreateTimer("playertext", 1002, 0, mins, secs-1)
 end
@@ -136,7 +141,6 @@ def DecomTimer(mins)
         CreateTimer("DecomTimer", 300, 0, mins-5)
     else
         playertext(5,0)
-        CreateTimer("Decom", 300000, 0)
     end
 end
 

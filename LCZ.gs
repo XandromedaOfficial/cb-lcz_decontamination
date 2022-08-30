@@ -7,7 +7,9 @@ global suffer
 def erase(what,coughtimer)
     local check
     RemoveTimer(coughtimer)
-    SetPlayerFogRange(what,8)
+    if IsPlayerConnected(what) == 1 then
+        SetPlayerFogRange(what,8)
+    end 
     for y = 1; y < len tokill;y++
         check = tokill[y]
         if check == what then

@@ -30,7 +30,7 @@ def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
         return
     end
     if text == 0 then
-        text = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!", 50, 30, 123400, "DS-DIGITAL.ttf", 50)
+        text = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",60, 30, 123400, "DS-DIGITAL.ttf", 50)
     else
         RemovePlayerText(plr, text)
         text = 0

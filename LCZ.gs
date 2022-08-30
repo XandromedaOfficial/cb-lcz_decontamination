@@ -102,6 +102,16 @@ def wipeout(plr, text)
 end
 
 def playertext(mins, secs)
+    if secs == 0 then
+        if mins == 0 then
+            Decom()
+            return
+        else
+            mins = mins - 1
+            secs = 60
+        end
+    end
+    CreateTimer("playertext", 1000, 0, mins, secs-1)
     local sec
     if secs < 10 then
         sec = "0" + secs
@@ -122,16 +132,6 @@ def playertext(mins, secs)
             end
         end
     end
-    if secs == 0 then
-        if mins == 0 then
-            Decom()
-            return
-        else
-            mins = mins - 1
-            secs = 60
-        end
-    end
-    CreateTimer("playertext", 1000, 0, mins, secs-1)
 end
 
 def DecomTimer(mins)

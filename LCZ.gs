@@ -25,7 +25,7 @@ end
 
 def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 then
-        if IsPlayerConnected(plr) == 1 and text != 0 then   
+        if IsPlayerConnected(plr) == 1 and text != 0 then
             RemovePlayerText(plr, text)
         end
         erase(plr,coughtimer)

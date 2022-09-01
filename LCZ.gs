@@ -79,7 +79,7 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                         role = 10 //Human Damage
                         goahead = CreateTimer("cough",3000,1,x)
                     end
-                    SetPlayerFogRange(x,3)
+                    SetPlayerFogRange(x,1)
                     dmg(x,role,goahead,0) //dmg them
                 end
             end            
@@ -165,7 +165,7 @@ public def OnRoundStart()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 
-public def OnPlayerConsole(plr,msg) //Use console to immediately activate decom procedure
+public def OnPlayerConsole(_,msg) //Use console to immediately activate decom procedure
     if msg == "decom" then
         Decom()
     end

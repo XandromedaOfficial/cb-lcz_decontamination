@@ -67,7 +67,7 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                 end
                 if goahead == True then //if not in killing list, run this
                     goahead = nil
-                    for y = 1; y <= len tokill; y++
+                    for y; y <= len tokill; y++
                         check = tokill[y]
                         if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
                             tokill[y] = x

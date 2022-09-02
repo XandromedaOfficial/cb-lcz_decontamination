@@ -25,7 +25,7 @@ end
 
 def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
     if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 then
-        if IsPlayerConnected(plr) == 1 and text != 0 then   
+        if IsPlayerConnected(plr) == 1 and text != 0 then
             RemovePlayerText(plr, text)
         end
         erase(plr,coughtimer)
@@ -66,7 +66,6 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                     end
                 end
                 if goahead == True then //if not in killing list, run this
-                    goahead = nil
                     for y; y <= len tokill; y++
                         check = tokill[y]
                         if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
@@ -78,10 +77,10 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                         role = 100 //SCP Damage (uses role variable cause its easier than assigning new variable)
                     else
                         role = 10 //Human Damage
-                        local timer = CreateTimer("cough",3000,1,x)
+                        goahead = CreateTimer("cough",3000,1,x)
                     end
-                    SetPlayerFogRange(x,3)
-                    dmg(x,role,timer,0) //dmg them
+                    SetPlayerFogRange(x,1)
+                    dmg(x,role,goahead,0) //dmg them
                 end
             end            
         end
@@ -108,7 +107,11 @@ end
 
 def playertext(mins, secs)
     local sec
+    local colour = 123456
     if secs < 10 then
+        if mins == 0 then
+            colour = 1530000
+        end              
         sec = "0" + secs
     else
         sec = secs //display variable
@@ -130,8 +133,8 @@ def playertext(mins, secs)
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
-                sec = CreatePlayerText(x, decomtext, 15, 60,  123456, "DS-DIGITAL.ttf",50)
-                CreateTimer("wipeout", 1000, 0, x, sec)
+                sec = CreatePlayerText(x, decomtext, 15, 60,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
+                CreateTimer("wipeout", 1000, 0, x, sec) //remove text
             end
         end
     end
@@ -141,7 +144,7 @@ def DecomTimer(mins)
     ServerMessage("[FACILITY] LCZ Decontamination Process will commence in T-Minus " + mins + " minutes")
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
     if mins > 5 then
-        CreateTimer("DecomTimer", 300, 0, mins-5)
+        CreateTimer("DecomTimer", 300000, 0, mins-5)
     else
         playertext(5,0) //Start timer at 5 mins
     end
@@ -158,11 +161,11 @@ def enddecom()
     tokill = [64,SE_INT]
 end 
 
-public def OnPlayerChat()
-    CreateTimer("DecomTimer",0,0,5) //change the first 0 if you want the decom timer to start later
+public def OnRoundStart()
+    CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 
-public def OnPlayerConsole(plr,msg) //Use console to immediately activate decom procedure
+public def OnPlayerConsole(_,msg) //Use console to immediately activate decom procedure
     if msg == "decom" then
         Decom()
     end

@@ -99,12 +99,6 @@ def Decom()
     suffer = CreateTimer("Suffering",5000,1)
 end
 
-def wipeout(plr, text)
-    if IsPlayerConnected(plr) == 1 then
-        RemovePlayerText(plr, text)
-    end
-end
-
 global text
 
 def playertext(mins, secs)

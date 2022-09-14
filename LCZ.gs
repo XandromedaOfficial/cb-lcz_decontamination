@@ -99,7 +99,7 @@ def Decom()
     suffer = CreateTimer("Suffering",5000,1)
 end
 
-global text
+global textpointer
 
 def playertext(mins, secs)
     local sec
@@ -128,9 +128,9 @@ def playertext(mins, secs)
     CreateTimer("playertext", 1000, 0, mins, secs-1)
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
-            RemovePlayerText(x,text)
+            RemovePlayerText(x,textpointer)
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
-                text = CreatePlayerText(x, decomtext, 15, 60,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
+                textpointer = CreatePlayerText(x, decomtext, 15, 60,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
             end
         end
     end

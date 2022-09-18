@@ -22,7 +22,7 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                 end
                 if GetPlayerHealth(plr) > dmgpo then
                     GivePlayerHealth(plr,-1*dmgpo)
-                    CreateTimer("cough",4000,0,plr)
+                    CreateTimer("cough",7000,0,plr)
                 else
                     if role != 0 then
                         SetPlayerType(plr,0)

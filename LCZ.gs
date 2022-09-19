@@ -1,10 +1,14 @@
 #include "includes\multiplayer_core.inc"
 
-global sound, suffer = 0
+global sound, coughrepeat, suffer = 0
 
-def cough(plr)
-    if IsPlayerConnected(plr) then
-        PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)
+def cough()
+    for plr = 1; plr < 65;plr++
+        if IsPlayerConnected(plr) then
+            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 then
+                PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)
+            end
+        end
     end
 end
 
@@ -22,7 +26,6 @@ def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoin
                 end
                 if GetPlayerHealth(plr) > dmgpo then
                     GivePlayerHealth(plr,-1*dmgpo)
-                    CreateTimer("cough",7000,0,plr)
                 else
                     if role != 0 then
                         SetPlayerType(plr,0)
@@ -43,6 +46,7 @@ def Decom()
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound = CreateTimer("gas",500,1)
+    coughrepeat = CreateTimer("cough",4000,1)
     suffer = CreateTimer("Suffering",2000,1)
 end
 
@@ -104,11 +108,12 @@ end
 def enddecom()
     RemoveTimer(suffer)
     RemoveTimer(sound)
+    RemoveTimer(coughrepeat)
     suffer = 0
     tokill = [64,SE_INT]
 end 
 
-public def OnRoundStart()
+public def OnRoundStarted()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 

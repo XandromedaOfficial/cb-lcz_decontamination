@@ -1,8 +1,8 @@
 #include "includes\multiplayer_core.inc"
 
-global sound, coughrepeat, suffer = 0
+global sound, coughrepeat, suffer = 0 //timer values
 
-def cough()
+def cough() //make each plr in lcz cough every 4 secs
     for plr = 1; plr < 65;plr++
         if IsPlayerConnected(plr) then
             if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 then
@@ -12,7 +12,7 @@ def cough()
     end
 end
 
-def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
+def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
     for plr = 1; plr < 65; plr++
         if IsPlayerConnected(plr) then            
             local role = GetPlayerType(plr)
@@ -110,7 +110,6 @@ def enddecom()
     RemoveTimer(sound)
     RemoveTimer(coughrepeat)
     suffer = 0
-    tokill = [64,SE_INT]
 end 
 
 public def OnRoundStarted()

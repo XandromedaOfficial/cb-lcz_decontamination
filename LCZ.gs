@@ -14,9 +14,10 @@ end
 
 def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
     for plr = 1; plr < 65; plr++
-        if IsPlayerConnected(plr) then            
+        if IsPlayerConnected(plr) then
             local role = GetPlayerType(plr)
             if GetPlayerZone(plr) == 1 and role != 0 then
+                SetPlayerFogRange(plr,2.5)
                 local evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",60, 30, 1530000, "DS-DIGITAL.ttf", 50)
                 CreateTimer("wipeout", 1000, 0, plr, evactext)
                 if role == 6 or role == 5 or role > 9 and role != 13 then
@@ -32,6 +33,8 @@ def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ c
                         ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
                     end
                 end
+            else
+                SetPlayerFogRange(plr,8)
             end
         end
     end

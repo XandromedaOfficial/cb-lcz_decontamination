@@ -1,94 +1,41 @@
 #include "includes\multiplayer_core.inc"
 
-global tokill = [64,SE_INT] //To make sure there's space for everyone to suffer
-global sound
-global suffer = 0
+global sound, coughrepeat, suffer = 0 //timer values
 
-def erase(what,coughtimer)
-    local check
-    RemoveTimer(coughtimer)
-    if IsPlayerConnected(what) == 1 then
-        SetPlayerFogRange(what,8)
-    end
-    for y = 1; y < 65;y++
-        check = tokill[y]
-        if check == what then
-            tokill[y] = 0
-            return
+def cough() //make each plr in lcz cough every 4 secs
+    for plr = 1; plr < 65;plr++
+        if IsPlayerConnected(plr) then
+            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 then
+                PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)
+            end
         end
     end
 end
 
-def cough(plr)
-    if IsPlayerConnected(plr) then
-        PlaySound(plr,"SFX/Character/D9341/Cough1.ogg")
-    end
-end
-
-def dmg(plr, dmgpo, coughtimer, text) //damage plrs in LCZ
-    if IsPlayerConnected(plr) then
-        if GetPlayerZone(plr) != 1 or GetPlayerType(plr) == 0 or suffer == 0 then
-            if text != 0 then
-                RemovePlayerText(plr, text)
-            end
-            erase(plr,coughtimer)
-            return
-        end
-        if text == 0 then
-            text = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",60, 30, 1530000, "DS-DIGITAL.ttf", 50)
-        else
-            RemovePlayerText(plr, text)
-            text = 0
-        end
-        if GetPlayerHealth(plr) > dmgpo then
-            GivePlayerHealth(plr,-1*dmgpo)
-            CreateTimer("dmg", 1000, 0, plr, dmgpo, coughtimer, text) //Doesn't use regular loop parameter cause would need more space
-        else 
-            if text != 0 then
-                RemovePlayerText(plr, text)
-            end
-            erase(plr,coughtimer)
-            if GetPlayerType(plr) != 0 then
-                SetPlayerType(plr, 0)
-                ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
-            end
-        end
-    else
-        erase(plr,coughtimer)
-    end
-end
-
-def Suffering() //detect plrs in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
-    for x = 1; x < 65; x++
-        if IsPlayerConnected(x) == 1 then
-            local goahead = True
-            local role = GetPlayerType(x)
-            if GetPlayerZone(x) == 1 and role != 0 then //check if in killing list
-                for y = 1; y <= 65; y++
-                    check = tokill[y]
-                    if check == x then
-                        goahead = False
-                        break
+def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
+    for plr = 1; plr < 65; plr++
+        if IsPlayerConnected(plr) then
+            local role = GetPlayerType(plr)
+            if GetPlayerZone(plr) == 1 and role != 0 then
+                SetPlayerFogRange(plr,2.5)
+                local evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",60, 30, 1530000, "DS-DIGITAL.ttf", 50)
+                CreateTimer("wipeout", 1000, 0, plr, evactext)
+                if role == 6 or role == 5 or role > 9 and role != 13 then
+                    dmgpo = 100
+                else
+                    dmgpo = 10
+                end
+                if GetPlayerHealth(plr) > dmgpo then
+                    GivePlayerHealth(plr,-1*dmgpo)
+                else
+                    if role != 0 then
+                        SetPlayerType(plr,0)
+                        ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
                     end
                 end
-                if goahead == True then //if not in killing list, run this
-                    for y = 0; y <= 65; y++
-                        check = tokill[y]
-                        if tokill[y] == 0 then //if not in killing list, MAKE EM SUFFER
-                            tokill[y] = x
-                            break
-                        end
-                    end
-                    if role > 9 or role == 5 or role == 6 then //if SCP
-                        role = 50 //SCP Damage (uses role variable cause its easier than assigning new variable)
-                    else
-                        role = 5 //Human Damage
-                        goahead = CreateTimer("cough",3000,1,x)
-                    end
-                    SetPlayerFogRange(x,2)
-                    dmg(x,role,goahead,0) //dmg them
-                end
-            end            
+            else
+                SetPlayerFogRange(plr,8)
+            end
         end
     end
 end
@@ -102,7 +49,8 @@ def Decom()
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
     sound = CreateTimer("gas",500,1)
-    suffer = CreateTimer("Suffering",5000,1)
+    coughrepeat = CreateTimer("cough",4000,1)
+    suffer = CreateTimer("Suffering",2000,1)
 end
 
 def wipeout(plr,text)
@@ -152,7 +100,7 @@ def DecomTimer(mins)
     if mins > 10 then
         CreateTimer("DecomTimer", 300000, 0, mins-5)
     else
-        playertext(10,0) //Start timer at 5 mins
+        playertext(10,0) //Start timer at 10 mins
     end
 end
 
@@ -163,11 +111,11 @@ end
 def enddecom()
     RemoveTimer(suffer)
     RemoveTimer(sound)
+    RemoveTimer(coughrepeat)
     suffer = 0
-    tokill = [64,SE_INT]
 end 
 
-public def OnRoundStart()
+public def OnRoundStarted()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 

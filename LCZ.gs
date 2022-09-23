@@ -88,7 +88,7 @@ def playertext(mins, secs)
         if IsPlayerConnected(x) == 1 then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
                 sec = CreatePlayerText(x, decomtext, 15, 60,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
-                CreateTimer("wipeout",1000,0,plr,sec)
+                CreateTimer("wipeout",1000,0,x,sec)
             end
         end
     end
@@ -116,7 +116,7 @@ def enddecom()
 end 
 
 public def OnRoundStarted()
-    CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
+    CreateTimer("DecomTimer",0,0,5) //change the first 0 if you want the decom timer to start later
 end
 
 public def OnPlayerConsole(_,msg) //Use console to immediately activate decom procedure

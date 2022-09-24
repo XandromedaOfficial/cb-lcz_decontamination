@@ -116,7 +116,7 @@ def enddecom()
 end 
 
 public def OnRoundStarted()
-    CreateTimer("DecomTimer",0,0,5) //change the first 0 if you want the decom timer to start later
+    CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 
 public def OnPlayerConsole(_,msg) //Use console to immediately activate decom procedure

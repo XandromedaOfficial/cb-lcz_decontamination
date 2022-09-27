@@ -64,7 +64,7 @@ def playertext(mins, secs)
     local decomtext = "LCZ Decontamination will begin in " + mins + ":" + sec
     if secs == 0 then
         if mins == 0 then
-            Decom(); break //Timer finishes, Suffering begins
+            Decom(); return //Timer finishes, Suffering begins
         else
             mins = mins - 1; secs = 60
         end

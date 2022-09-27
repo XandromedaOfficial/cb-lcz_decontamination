@@ -43,9 +43,9 @@ def Decom()
     enddecom() //end any instance of decom still running
     CreateSound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     ServerMessage("[FACILITY] LCZ Decontamination Process has commenced")
-    sound = CreateTimer("gas",500,1)
-    coughrepeat = CreateTimer("cough",4000,1)
-    suffer = CreateTimer("Suffering",2000,1)
+    timer[0] = CreateTimer("gas",500,1)
+    timer[1] = CreateTimer("cough",4000,1)
+    timer[2] = CreateTimer("Suffering",2000,1)
 end
 
 def wipeout(plr,text)
@@ -69,7 +69,7 @@ def playertext(mins, secs)
             mins = mins - 1; secs = 60
         end
     end
-    if suffer != 0 then return//if decom starts in some other way, shut down timer
+    if timer[2] != false then return//if decom starts in some other way, shut down timer
     CreateTimer("playertext", 1000, 0, mins, secs-1)
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
@@ -96,10 +96,10 @@ public def OnServerRestart()
 end
 
 def enddecom()
-    RemoveTimer(suffer)
-    RemoveTimer(sound)
-    RemoveTimer(coughrepeat)
-    suffer = 0
+    RemoveTimer(timer[0])
+    RemoveTimer(timer[1])
+    RemoveTimer(timer[2])
+    timer = [3,SE_INT] //wipe list
 end 
 
 public def OnRoundStarted()

@@ -1,13 +1,11 @@
 #include "includes\multiplayer_core.inc"
 
-global sound, coughrepeat, suffer = 0 //timer values
+global timers = [3,SE_INT] //timer values
 
 def cough() //make each plr in lcz cough every 4 secs
     for plr = 1; plr < 65;plr++
         if IsPlayerConnected(plr) then
-            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 then
-                PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)
-            end
+            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 then PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)                
         end
     end
 end
@@ -27,11 +25,8 @@ def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ c
                 end
                 if GetPlayerHealth(plr) > dmgpo then
                     GivePlayerHealth(plr,-1*dmgpo)
-                else
-                    if role != 0 then
-                        SetPlayerType(plr,0)
-                        ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
-                    end
+                else                    
+                    SetPlayerType(plr,0); ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
                 end
             else
                 SetPlayerFogRange(plr,8)
@@ -54,18 +49,14 @@ def Decom()
 end
 
 def wipeout(plr,text)
-    if IsPlayerConnected(plr) then
-        RemovePlayerText(plr,text)
-    end
+    if IsPlayerConnected(plr) then RemovePlayerText(plr,text)
 end
 
 def playertext(mins, secs)
     local sec
     local colour = 123456 //yes, colour not color
     if secs < 10 then
-        if mins == 0 then
-            colour = 1530000
-        end              
+        if mins == 0 then colour = 1530000
         sec = "0" + secs
     else
         sec = secs //display variable
@@ -73,16 +64,12 @@ def playertext(mins, secs)
     local decomtext = "LCZ Decontamination will begin in " + mins + ":" + sec
     if secs == 0 then
         if mins == 0 then
-            Decom() //Timer finishes, Suffering begins
-            return
+            Decom(); break //Timer finishes, Suffering begins
         else
-            mins = mins - 1
-            secs = 60
+            mins = mins - 1; secs = 60
         end
     end
-    if suffer != 0 then //if decom starts in some other way, shut down timer
-        return
-    end
+    if suffer != 0 then return//if decom starts in some other way, shut down timer
     CreateTimer("playertext", 1000, 0, mins, secs-1)
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
@@ -119,11 +106,11 @@ public def OnRoundStarted()
     CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 
-public def OnPlayerConsole(_,msg) //Use console to immediately activate decom procedure
-    if msg == "decom" then
-        Decom()
-    end
-    if msg == "enddecom" then //use console to shutdown decom
-        enddecom()
+public def OnPlayerConsole(_,msg) 
+    select msg
+        case "decom" //Use console to immediately activate decom procedure
+            Decom()
+        case "enddecom" //use console to shutdown decom
+            enddecom()
     end
 end

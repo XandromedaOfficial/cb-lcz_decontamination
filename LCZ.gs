@@ -53,14 +53,13 @@ def wipeout(plr,text)
 end
 
 def playertext(mins, secs)
-    local sec
-    local colour = 123456 //yes, colour not color
+    local sec,colour = 123456 //yes, colour not color
     if secs < 10 then
         if mins == 0 then colour = 1530000
         sec = "0" + secs
-    else
-        sec = secs //display variable
-    end
+        else 
+            sec = secs //display variable
+        end
     local decomtext = "LCZ Decontamination will begin in " + mins + ":" + sec
     if secs == 0 then
         if mins == 0 then

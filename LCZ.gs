@@ -17,7 +17,7 @@ def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ c
             if GetPlayerZone(plr) == 1 and role != 0 then
                 SetPlayerFogRange(plr,2.5)
                 local screen_width = GetPlayerMonitorWidth(plr)
-                local evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",60, screen_width/16, 1530000, "DS-DIGITAL.ttf", 50)
+                local evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",screen_width/8, 30, 1530000, "DS-DIGITAL.ttf", 50)
                 CreateTimer("wipeout", 1000, 0, plr, evactext)
                 if role == 6 or role == 5 or role > 9 and role != 13 then
                     dmgpo = 100
@@ -54,13 +54,14 @@ def wipeout(plr,text)
 end
 
 def playertext(mins, secs)
-    local sec,colour = 123456 //yes, colour not color
+    local sec
+    local colour = 123456 //yes, colour not color
     if secs < 10 then
         if mins == 0 then colour = 1530000
         sec = "0" + secs
-        else 
-            sec = secs //display variable
-        end
+    else
+        sec = secs //display variable
+    end
     local decomtext = "LCZ Decontamination will begin in " + mins + ":" + sec
     if secs == 0 then
         if mins == 0 then
@@ -75,7 +76,7 @@ def playertext(mins, secs)
         if IsPlayerConnected(x) == 1 then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
                 local screen_width = GetPlayerMonitorWidth(x)
-                sec = CreatePlayerText(x, decomtext, 15, screen_width/8,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
+                sec = CreatePlayerText(x, decomtext, screen_width/32, 60,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
                 CreateTimer("wipeout",1000,0,x,sec)
             end
         end

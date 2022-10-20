@@ -1,6 +1,6 @@
 #include "includes\multiplayer_core.inc"
 
-global timers = [3,SE_INT] //timer values
+global timer = [3,SE_INT] //timer values
 
 def cough() //make each plr in lcz cough every 4 secs
     for plr = 1; plr < 65;plr++
@@ -16,7 +16,8 @@ def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ c
             local role = GetPlayerType(plr)
             if GetPlayerZone(plr) == 1 and role != 0 then
                 SetPlayerFogRange(plr,2.5)
-                local evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",60, 30, 1530000, "DS-DIGITAL.ttf", 50)
+                local screen_width = GetPlayerMonitorHeight(plr)
+                local evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",60, screen_width/16, 1530000, "DS-DIGITAL.ttf", 50)
                 CreateTimer("wipeout", 1000, 0, plr, evactext)
                 if role == 6 or role == 5 or role > 9 and role != 13 then
                     dmgpo = 100
@@ -68,12 +69,13 @@ def playertext(mins, secs)
             mins = mins - 1; secs = 60
         end
     end
-    if timer[2] != false then return//if decom starts in some other way, shut down timer
+    if timer[2] then return//if decom starts in some other way, shut down timer
     CreateTimer("playertext", 1000, 0, mins, secs-1)
     for x = 1; x < 65; x++
         if IsPlayerConnected(x) == 1 then
             if GetPlayerZone(x) == 1 and GetPlayerType(x) != 0 then
-                sec = CreatePlayerText(x, decomtext, 15, 60,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
+                local screen_width = GetPlayerMonitorHeight(x)
+                sec = CreatePlayerText(x, decomtext, 15, screen_width/8,  colour, "DS-DIGITAL.ttf",50) //not using sec variable anymore so might as well repurpose it
                 CreateTimer("wipeout",1000,0,x,sec)
             end
         end
@@ -86,7 +88,7 @@ def DecomTimer(mins)
     if mins > 10 then
         CreateTimer("DecomTimer", 300000, 0, mins-5)
     else
-        playertext(10,0) //Start timer at 10 mins
+        playertext(1,0) //Start timer at 10 mins
     end
 end
 
@@ -95,14 +97,14 @@ public def OnServerRestart()
 end
 
 def enddecom()
-    RemoveTimer(timer[0])
-    RemoveTimer(timer[1])
-    RemoveTimer(timer[2])
+    for x = 0; x < 3;x++
+        RemoveTimer(timer[x])
+    end
     timer = [3,SE_INT] //wipe list
 end 
 
 public def OnRoundStarted()
-    CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
+    CreateTimer("DecomTimer",0,0,5) //change the first 0 if you want the decom timer to start later
 end
 
 public def OnPlayerConsole(_,msg) 

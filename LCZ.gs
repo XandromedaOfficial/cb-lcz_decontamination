@@ -89,7 +89,7 @@ def DecomTimer(mins)
     if mins > 10 then
         CreateTimer("DecomTimer", 300000, 0, mins-5)
     else
-        playertext(1,0) //Start timer at 10 mins
+        playertext(10,0) //Start timer at 10 mins
     end
 end
 
@@ -103,7 +103,7 @@ def enddecom()
 end 
 
 public def OnRoundStarted()
-    CreateTimer("DecomTimer",0,0,5) //change the first 0 if you want the decom timer to start later
+    CreateTimer("DecomTimer",0,0,15) //change the first 0 if you want the decom timer to start later
 end
 
 public def OnPlayerConsole(plr,msg) 

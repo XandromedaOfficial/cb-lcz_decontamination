@@ -5,8 +5,15 @@ global timer = [3,SE_INT] //timer values
 def cough() //make each plr in lcz cough every 4 secs
     for plr = 1; plr < 65;plr++
         if IsPlayerConnected(plr) then
-            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 then PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)                
+            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 and not ifSCP() then PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)                
         end
+    end
+end
+def ifSCP(role)
+    if role == 6 or role == 5 or role > 9 and role != 13 then
+        return True
+    else
+        return False
     end
 end
 
@@ -16,10 +23,10 @@ def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ c
             local role = GetPlayerType(plr)
             if GetPlayerZone(plr) == 1 and role != 0 then
                 SetPlayerFogRange(plr,2.5)
-                local screen_width = GetPlayerMonitorWidth(plr)
-                local evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",screen_width/12, 30, 1530000, "DS-DIGITAL.ttf", 50)
+                local evactext = GetPlayerMonitorWidth(plr) //Use that variable name for the moment
+                evactext = CreatePlayerText(plr, "You are in decontamination gas, evacuate LCZ NOW!",evactext/12, 30, 1530000, "DS-DIGITAL.ttf", 50)
                 CreateTimer("wipeout", 1000, 0, plr, evactext)
-                if role == 6 or role == 5 or role > 9 and role != 13 then
+                if ifSCP() then
                     dmgpo = 100
                 else
                     dmgpo = 10
@@ -27,7 +34,9 @@ def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ c
                 if GetPlayerHealth(plr) > dmgpo then
                     GivePlayerHealth(plr,-1*dmgpo)
                 else                    
-                    SetPlayerType(plr,0); ServerMessage(GetPlayerNickname(plr)+" suffocated in decontamination gas")
+                    SetPlayerType(plr,0)
+                    dmgpo = GetPlayerNickname(plr)
+                    ServerMessage(dmgpo+" suffocated in decontamination gas")
                 end
             else
                 SetPlayerFogRange(plr,8)

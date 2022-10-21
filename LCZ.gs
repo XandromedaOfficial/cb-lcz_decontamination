@@ -5,16 +5,13 @@ global timer = [3,SE_INT] //timer values
 def cough() //make each plr in lcz cough every 4 secs
     for plr = 1; plr < 65;plr++
         if IsPlayerConnected(plr) then
-            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 and not ifSCP() then PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)                
+            if GetPlayerType(plr) != 0 and GetPlayerZone(plr) == 1 and not ifSCP() then PlayPlayerSound(plr,"SFX/Character/D9341/Cough1.ogg",10,1)
         end
     end
 end
 def ifSCP(role)
-    if role == 6 or role == 5 or role > 9 and role != 13 then
-        return True
-    else
-        return False
-    end
+    if role == 6 or role == 5 or role > 9 and role != 13 then return True
+    return False
 end
 
 def Suffering() //detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol

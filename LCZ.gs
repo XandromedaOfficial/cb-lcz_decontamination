@@ -98,9 +98,7 @@ public def OnServerRestart()
 end
 
 def enddecom()
-    for x = 0; x < 3;x++
-        RemoveTimer(timer[x])
-    end
+    for x = 0; x < 3;x++; RemoveTimer(timer[x]); end
     timer = [3,SE_INT] //wipe list
 end 
 
@@ -108,11 +106,14 @@ public def OnRoundStarted()
     CreateTimer("DecomTimer",0,0,5) //change the first 0 if you want the decom timer to start later
 end
 
-public def OnPlayerConsole(_,msg) 
+public def OnPlayerConsole(plr,msg) 
+    plr = GetPlayerNickname(plr)
     select msg
         case "decom" //Use console to immediately activate decom procedure
+            ServerMessage("Decom Procedure manually started by"+plr)
             Decom()
         case "enddecom" //use console to shutdown decom
+            ServerMessage("Decom Procedure ended by"+plr)
             enddecom()
     end
 end

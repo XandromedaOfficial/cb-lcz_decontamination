@@ -66,7 +66,7 @@ def playertext(mins, secs)
     local sec
     local colour = 123456 //yes, colour not color
     if secs < 10 then
-        if mins == 0 then colour = 1530000
+        if mins == 0 then colour = 16711680
         sec = "0" + secs
     else
         sec = secs //display variable

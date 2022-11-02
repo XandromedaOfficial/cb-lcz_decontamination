@@ -52,3 +52,14 @@ function Decom()
     timers = {createtimer("createsound",500,1,"SFX/General/Hiss.ogg",72, 0, 133, 70, 4),createtimer("cough",4000,1),createtimer("Suffering",2000,1)}
     --timers[1] gas, 2: Cough, 3: DEATH
 end
+
+function IfSCP(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
+--Test for role if SCP. Except for zombie cause 300 hp, feel sad
+
+def cough() //make each plr in lcz cough every 4 secs
+    for plr = 1, 64 do
+        if isplayerconnected(plr) then
+            if getplayertype(plr) ~= 0 and getplayerzone(plr) == 1 and not ifSCP() then playplayersound(plr,"SFX/Character/D9341/Cough1.ogg",10,1) end
+        end
+    end
+end

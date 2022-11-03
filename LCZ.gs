@@ -120,7 +120,7 @@ public def OnPlayerConsole(plr,msg)
         case "decom" //Use console to immediately activate decom procedure
             ServerMessage("Decom Procedure manually started by"+plr)
             Decom()
-        case "enddecom" //use console to shutdown decom
+        case "enddecom" //Use console to shutdown decom
             ServerMessage("Decom Procedure ended by"+plr)
             enddecom()
     end

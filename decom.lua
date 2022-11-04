@@ -2,6 +2,9 @@ timers = {}
 
 function OnScriptLoaded()
     print("Decom")
+    secs = tonumber("8")
+    sec = "0"..secs
+    print(sec)
     return -1
 end
 
@@ -10,7 +13,7 @@ function Decom_Annouc(mins)
     servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins))
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
     recursive = function(mins) Decom_Annouc(mins); return -1 end --Lua plays a bit funny with the createtimer() function so...        
-    if mins > 10 then createtimer("recursive",1000,0,mins-5) else DecomTimer(10,0) end
+    if mins > 10 then createtimer("recursive",1000,0,mins-5) else DecomTimer(10,20) end
     return -1
 end
 
@@ -21,14 +24,19 @@ function wipeout(plr,txt)
 end
 
 function DecomTimer(mins,secs)
+    
     mins,secs = tonumber(mins),tonumber(secs)
     local sec
     local colour = 123456 --yes, colour not color
     if secs < 10 then
         if mins == 0 then colour = 16711680 end
+        print("pain")
         sec = "0"..secs
-    else sec = secs end --display variable
-    local decomtext = string.format("LCZ Decontamination will begin in %d:%d",mins,sec)
+        print(sec)
+    else
+        sec = secs
+    end --display variable
+    local decomtext = string.format("LCZ Decontamination will begin in %d:%s",mins,sec)
     if secs == 0 then
         if mins == 0 then
             Decom(); return -1 --Timer finishes, Suffering begins
@@ -38,7 +46,6 @@ function DecomTimer(mins,secs)
         end
     end
     if not timers[3] then --if decom starts in some other way, shut down timer
-        print("lego")
         recursive = function(mins,secs) DecomTimer(mins,secs); return -1 end --Screwy createtimer() work around
         createtimer("recursive", 1000, 0, mins, secs-1)
         for plr = 1, 64 do
@@ -66,8 +73,8 @@ function Decom() --Start Decom. Activates alarm, message and functions. Activate
     return -1
 end
 
-function IfSCP(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
---Test for role if SCP. Except for zombie cause 300 hp, feel sad
+function ifSCP(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
+--Test for role if SCP. Except for zombie cause 300 hp, feel sad. Will take 100 dmg and will not cough during decom. Humans (and 49-2) will take 10 dmg and audibly cough
 
 function cough() --make each plr in lcz cough every 4 secs
     for plr = 1, 64 do
@@ -108,22 +115,22 @@ end
 function OnRoundStarted() Decom_Annouc(15); return -1 end --Change first 0 to change when the first annoucement is made
 
 function OnServerRestart() --Shut down decom and reset timers list
-    for x = 1, 3 do removetimer(timers[x]) end
-    timers = {}
+    if timers[3] then for x = 1, 3 do removetimer(timers[x]) end end --Only removes timers if there's something to remove
+    timers = {} --Wipe the list
     return -1
 end --For all intents and purposes, OnServerRestart() is the new callback for enddecom()
 
 function OnPlayerConsole(plr,msg)
+    plr = getplayernickname(plr)
     local select = {
         ["decom"] = function() --Use console to immediately activate decom procedure
-            servermessage("Decom Procedure manually activated by "..getplayernickname(plr)) --Make sure everyone knows whose gassing them
+            servermessage("Decom Procedure manually activated by "..plr) --Make sure everyone knows whose gassing them
             Decom()
         end,
         ["enddecom"] = function() --Use console to shutdown decom
-            servermessage("Decom Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
+            servermessage("Decom Procedure ended by "..plr) --Make sure everyone knows who saved them
             OnServerRestart()
-        end
-    }
+        end}
     if type(select[msg]) == "function" then select[msg]() end
     return -1
 end

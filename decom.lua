@@ -2,24 +2,30 @@ timers = {}
 
 function OnScriptLoaded()
     print("Decom")
+    createtimer("printy",100,0,"lego")
     return -1
 end
 
 function Decom_Annouc(mins)
+    mins = tonumber(mins)
     servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins))
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
     if mins > 10 then createtimer("Decom_Annouc", 300000, 0, mins-5) else DecomTimer(10,0) end
     return -1
 end
 
-function wipeout(plr,txt) if isplayerconnected(plr) == 1 then removeplayertext(plr,txt) end end
+function wipeout(plr,txt) 
+    plr,txt = tonumber(plr),tonumber(txt)
+    if isplayerconnected(plr) == 1 then removeplayertext(plr,txt) end
+end
 
-function DecomTimer()
+function DecomTimer(mins,secs)
+    mins,secs = tonumber(mins),tonumber(secs)
     local sec
     local colour = 123456 --yes, colour not color
     if secs < 10 then
         if mins == 0 then colour = 16711680 end
-        sec = "0" + secs
+        sec = "0" .. secs
     else sec = secs end --display variable
     local decomtext = string.format("LCZ Decontamination will begin in %d:%d",mins,sec)
     if secs == 0 then
@@ -31,14 +37,14 @@ function DecomTimer()
         end
     end
     if timers[3] then return end--if decom starts in some other way, shut down timer
-    createtimer("playertext", 1000, 0, mins, secs-1)
-    for x = 1, 64 do
+    createtimer("DecomTimer", 1000, 0, mins, secs-1)
+    for plr = 1, 64 do
         if isplayerconnected(x) == 1 then
             if getplayerzone(x) == 1 and getplayertype(x) ~= 0 then
                 local screen_width = getplayermonitorwidth(x)
                 local screen_height = getplayermonitorheight(x)
                 sec = createplayertext(x, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
-                createtimer("wipeout",1000,0,x,sec)
+                createtimer("wipeout",1000,0,plr,sec)
             end
         end
     end

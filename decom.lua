@@ -2,7 +2,6 @@ timers = {}
 
 function OnScriptLoaded()
     print("Decom")
-    createtimer("printy",100,0,"lego")
     return -1
 end
 
@@ -10,13 +9,15 @@ function Decom_Annouc(mins)
     mins = tonumber(mins)
     servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins))
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
-    if mins > 10 then createtimer("Decom_Annouc", 300000, 0, mins-5) else DecomTimer(10,0) end
+    recursive = function(mins) Decom_Annouc(mins); return -1 end --Lua plays a bit funny with the createtimer() function so...        
+    if mins > 10 then createtimer("recursive",1000,0,mins-5) else DecomTimer(10,0) end
     return -1
 end
 
 function wipeout(plr,txt) 
     plr,txt = tonumber(plr),tonumber(txt)
     if isplayerconnected(plr) == 1 then removeplayertext(plr,txt) end
+    return -1
 end
 
 function DecomTimer(mins,secs)
@@ -25,37 +26,44 @@ function DecomTimer(mins,secs)
     local colour = 123456 --yes, colour not color
     if secs < 10 then
         if mins == 0 then colour = 16711680 end
-        sec = "0" .. secs
+        sec = "0"..secs
     else sec = secs end --display variable
     local decomtext = string.format("LCZ Decontamination will begin in %d:%d",mins,sec)
     if secs == 0 then
         if mins == 0 then
-            Decom(); return --Timer finishes, Suffering begins
+            Decom(); return -1 --Timer finishes, Suffering begins
         else
             mins = mins - 1
             secs = 60
         end
     end
-    if timers[3] then return end--if decom starts in some other way, shut down timer
-    createtimer("DecomTimer", 1000, 0, mins, secs-1)
-    for plr = 1, 64 do
-        if isplayerconnected(x) == 1 then
-            if getplayerzone(x) == 1 and getplayertype(x) ~= 0 then
-                local screen_width = getplayermonitorwidth(x)
-                local screen_height = getplayermonitorheight(x)
-                sec = createplayertext(x, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
-                createtimer("wipeout",1000,0,plr,sec)
+    if not timers[3] then --if decom starts in some other way, shut down timer
+        print("lego")
+        recursive = function(mins,secs) DecomTimer(mins,secs); return -1 end --Screwy createtimer() work around
+        createtimer("recursive", 1000, 0, mins, secs-1)
+        for plr = 1, 64 do
+            if isplayerconnected(plr) == 1 then
+                if getplayerzone(plr) == 1 and getplayertype(plr) ~= 0 then
+                    local screen_width = getplayermonitorwidth(plr)
+                    local screen_height = getplayermonitorheight(plr)
+                    sec = createplayertext(plr, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
+                    createtimer("wipeout",1000,0,plr,sec)
+                end
             end
         end
     end
+    return -1
 end
+
+function gas() createsound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4); return -1 end
 
 function Decom() --Start Decom. Activates alarm, message and functions. Activates Suffering() which is the actual killing
     OnServerRestart() --end any instance of decom still running
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     servermessage("[FACILITY] LCZ Decontamination Process has commenced")
-    timers = {createtimer("createsound",500,1,"SFX/General/Hiss.ogg",72, 0, 133, 70, 4),createtimer("cough",4000,1),createtimer("Suffering",2000,1)}
+    timers = {createtimer("gas",500,1),createtimer("cough",4000,1),createtimer("Suffering",2000,1)}
     --timers[1] gas, 2: Cough, 3: DEATH
+    return -1
 end
 
 function IfSCP(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
@@ -67,6 +75,7 @@ function cough() --make each plr in lcz cough every 4 secs
             if getplayertype(plr) ~= 0 and getplayerzone(plr) == 1 and not ifSCP() then playplayersound(plr,"SFX/Character/D9341/Cough1.ogg",10,1) end
         end
     end
+    return -1
 end
 
 function Suffering() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
@@ -84,18 +93,19 @@ function Suffering() --detect plrs and dmg in LCZ. See into replacing this with 
                     giveplayerhealth(plr,-1*dmgpo)
                 else --Else its time to die
                     setplayertype(plr,0)
-                    servermessage(getplayernickname(plr)+" suffocated in decontamination gas")
+                    servermessage(getplayernickname(plr).." suffocated in decontamination gas")
                 end
             else
                 setplayerfogrange(plr,8)
             end
         end
     end
+    return -1
 end
 
 -----------Callbacks-------------
 
-function OnRoundStarted() createtimer("Decom_Annouc",0,0,15); return -1 end --Change first 0 to change when the first annoucement is made
+function OnRoundStarted() Decom_Annouc(15); return -1 end --Change first 0 to change when the first annoucement is made
 
 function OnServerRestart() --Shut down decom and reset timers list
     for x = 1, 3 do removetimer(timers[x]) end
@@ -106,11 +116,11 @@ end --For all intents and purposes, OnServerRestart() is the new callback for en
 function OnPlayerConsole(plr,msg)
     local select = {
         ["decom"] = function() --Use console to immediately activate decom procedure
-            servermessage("Decom Procedure manually activated by"+getplayernickname(plr)) --Make sure everyone knows whose gassing them
+            servermessage("Decom Procedure manually activated by "..getplayernickname(plr)) --Make sure everyone knows whose gassing them
             Decom()
         end,
         ["enddecom"] = function() --Use console to shutdown decom
-            servermessage("Decom Procedure ended by"+getplayernickname(plr)) --Make sure everyone knows who saved them
+            servermessage("Decom Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
             OnServerRestart()
         end
     }

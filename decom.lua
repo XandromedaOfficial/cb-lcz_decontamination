@@ -9,8 +9,8 @@ function decom_annouc(mins)
     mins = tonumber(mins)
     servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins))
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
-    recursive = function(mins) Decom_Annouc(mins); return -1 end --Lua plays a bit funny with the createtimer() function so...        
-    if mins > 10 then createtimer("recursive",1000,0,mins-5) else DecomTimer(10,20) end
+    recursive = function(mins) decom_annouc(mins); return -1 end --Lua plays a bit funny with the createtimer() function so...        
+    if mins > 10 then createtimer("recursive",1000,0,mins-5) else createtimer("decomtimer",1000,0,10,20) end
     return -1
 end
 
@@ -20,7 +20,7 @@ function wipeout(plr,txt)
     return -1
 end
 
-function DecomTimer(mins,secs)    
+function decomtimer(mins,secs)    
     mins,secs = tonumber(mins),tonumber(secs)
     local sec
     local colour = 123456 --yes, colour not color
@@ -38,7 +38,7 @@ function DecomTimer(mins,secs)
         end
     end
     if not timers[3] then --if decom starts in some other way, shut down timer
-        recursive = function(mins,secs) DecomTimer(mins,secs); return -1 end --Screwy createtimer() work around
+        recursive = function(mins,secs) decomtimer(mins,secs); return -1 end --Screwy createtimer() work around
         createtimer("recursive", 1000, 0, mins, secs-1)
         for plr = 1, 64 do
             if isplayerconnected(plr) == 1 then

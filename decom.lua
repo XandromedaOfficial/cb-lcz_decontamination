@@ -2,13 +2,10 @@ timers = {}
 
 function OnScriptLoaded()
     print("Decom")
-    secs = tonumber("8")
-    sec = "0"..secs
-    print(sec)
     return -1
 end
 
-function Decom_Annouc(mins)
+function decom_annouc(mins)
     mins = tonumber(mins)
     servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins))
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
@@ -23,19 +20,14 @@ function wipeout(plr,txt)
     return -1
 end
 
-function DecomTimer(mins,secs)
-    
+function DecomTimer(mins,secs)    
     mins,secs = tonumber(mins),tonumber(secs)
     local sec
     local colour = 123456 --yes, colour not color
     if secs < 10 then
         if mins == 0 then colour = 16711680 end
-        print("pain")
         sec = "0"..secs
-        print(sec)
-    else
-        sec = secs
-    end --display variable
+    else sec = secs end --display variable
     local decomtext = string.format("LCZ Decontamination will begin in %d:%s",mins,sec)
     if secs == 0 then
         if mins == 0 then
@@ -68,7 +60,7 @@ function Decom() --Start Decom. Activates alarm, message and functions. Activate
     OnServerRestart() --end any instance of decom still running
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     servermessage("[FACILITY] LCZ Decontamination Process has commenced")
-    timers = {createtimer("gas",500,1),createtimer("cough",4000,1),createtimer("Suffering",2000,1)}
+    timers = {createtimer("gas",500,1),createtimer("cough",4000,1),createtimer("suffering",2000,1)}
     --timers[1] gas, 2: Cough, 3: DEATH
     return -1
 end
@@ -79,13 +71,13 @@ function ifSCP(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then r
 function cough() --make each plr in lcz cough every 4 secs
     for plr = 1, 64 do
         if isplayerconnected(plr) then
-            if getplayertype(plr) ~= 0 and getplayerzone(plr) == 1 and not ifSCP() then playplayersound(plr,"SFX/Character/D9341/Cough1.ogg",10,1) end
+            if getplayertype(plr) ~= 0 and getplayerzone(plr) == 1 and not ifSCP(getplayertype(plr)) then playplayersound(plr,"SFX/Character/D9341/Cough1.ogg",10,1) end
         end
     end
     return -1
 end
 
-function Suffering() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
+function suffering() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
     for plr = 1, 64 do
         if isplayerconnected(plr) == 1 then
             local role = getplayertype(plr)
@@ -112,7 +104,7 @@ end
 
 -----------Callbacks-------------
 
-function OnRoundStarted() Decom_Annouc(15); return -1 end --Change first 0 to change when the first annoucement is made
+function OnRoundStarted() createtimer("decom_annouc",0,0,15); return -1 end --Change first 0 to change when the first annoucement is made
 
 function OnServerRestart() --Shut down decom and reset timers list
     if timers[3] then for x = 1, 3 do removetimer(timers[x]) end end --Only removes timers if there's something to remove

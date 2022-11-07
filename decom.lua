@@ -14,7 +14,7 @@ end
 function Decom() --Start Decom. Activates alarm, message and functions. Defines Suffering() which is the actual killing
 
     local ifSCP = function(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
-    --Test for role if SCP. Except for zombie cause 300 hp, feel sad. Will take 100 dmg and will not cough during decom. Humans (and 49-2) will take 10 dmg and audibly cough
+    --Test for role if SCP. Except for zombie cause 300 hp. Will take 100 dmg and will not cough during decom. Humans (and 49-2) will take 10 dmg and audibly cough
 
     gas = function() createsound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4); return -1 end --Create a gas hissing sound, similar to the ones in the gas chambers
 
@@ -41,7 +41,7 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
                     if ifSCP(role) then dmgpo = 100 else dmgpo = 10 end
                     if getplayerhealth(plr) > dmgpo then --If they still have health, dmg em
                         giveplayerhealth(plr,-1*dmgpo)
-                    else --Else its time to die
+                    else --Else "kill" em
                         setplayertype(plr,0)
                         servermessage(getplayernickname(plr).." suffocated in decontamination gas")
                     end
@@ -102,7 +102,7 @@ function OnRoundStarted()
         servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
         createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
         recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...
-        if mins > 10 then createtimer("recursive",1000,0) else createtimer("decomtimer",1000,0,10,0) end --Wait 5 mins. Then if 10 mins to decom activate decomtimer() else annouc
+        if mins > 10 then createtimer("recursive",1000,0) else createtimer("decomtimer",1000,0,mins,0) end --Wait 5 mins. Then if 10 mins to decom activate decomtimer() else annouc
         return -1
     end
 

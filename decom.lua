@@ -57,21 +57,25 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
     createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
     servermessage("[FACILITY] LCZ Decontamination Process has commenced")
     timers = {createtimer("gas",500,1),createtimer("cough",4000,1),createtimer("suffering",2000,1)}
+    print(timers[3])
     --timers[1] gas, 2: Cough, 3: suffering
     return -1
 end
 
 -----------Callbacks-------------
 
-function OnRoundStarted() 
-
+function OnRoundStarted()    
+    
     decomtimer = function(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
+        print(string.format("%d:%d",mins,secs))
         mins,secs = tonumber(mins),tonumber(secs)
         local colour,sec = 123456 --yes, colour not color. Intialise sec as nil value which will later become a display variable
+
         if secs < 10 then
             if mins == 0 then colour = 16711680 end --If final 10 secs, turn red. 
             sec = "0"..secs -- If less than 10 secs, add a zero before the number so 9:1 becomes 9:01.
         else sec = secs end --display variable
+
         local decomtext = string.format("LCZ Decontamination will begin in %d:%s",mins,sec) --Set up display name
         if secs == 0 then --Change secs and mins for next second of decomtimer
             if mins == 0 then Decom(); return -1 --Timer finishes, Suffering begins
@@ -80,18 +84,21 @@ function OnRoundStarted()
                 secs = 60
             end
         end
+
         if not timers[3] then --if decom starts in some other way, shut down timer
             recursive = function() decomtimer(mins,secs-1); return -1 end --Screwy createtimer() work around. Restart function but with secs-1 cause thats how time works
             createtimer("recursive", 1000, 0)
             for plr = 1, 64 do
+
                 if isplayerconnected(plr) == 1 then --Lua thinks 0 = true...
                     if getplayerzone(plr) == 1 and getplayertype(plr) ~= 0 then
-                        mins = getplayermonitorwidth(plr)
-                        secs = getplayermonitorheight(plr) --These variables dont get used anymore, so y not
-                        sec = createplayertext(plr, decomtext, mins/32, secs/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
+                        local screen_width = getplayermonitorwidth(plr)
+                        local screen_height = getplayermonitorheight(plr) --These variables dont get used anymore, so y not
+                        sec = createplayertext(plr, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
                         createtimer("wipeout",1000,0,plr,sec)
                     end
                 end
+
             end
         end
         return -1
@@ -101,18 +108,21 @@ function OnRoundStarted()
         mins = tonumber(mins)
         servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
         createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
-        recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...
-        if mins > 10 then createtimer("recursive",1000,0) else createtimer("decomtimer",1000,0,mins,0) end --Wait 5 mins. Then if 10 mins to decom activate decomtimer() else annouc
+        recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...        
+        if mins > 10 then createtimer("recursive",1000,0) else createtimer("decomtimer",1000,0,10,0) end --Wait 5 mins. Then if 10 mins to decom activate decomtimer() else annouc
         return -1
     end
 
-    createtimer("decom_annouc",0,0,15)
+    createtimer("decom_annouc",1000,0,15)
     return -1
 end --Change first 0 to change when the first annoucement is made
 
 function OnServerRestart() --Shut down decom and reset timers list
-    if timers[3] then for x = 1, 3 do removetimer(timers[x]) end end --Only removes timers if there's something to remove
-    timers = {} --Wipe the list
+    print("RESTART")
+    if timers[3] then for x = 1, 3 do removetimer(timers[x]); print(x) end end --Only removes timers if there's something to remove
+    timers[3] = true
+    wipelist = function() timers = {}; return -1 end --Ask Goodman about this
+    if isplayerconnected(1) == 1 then createtimer("wipelist",1000,0); print("prepare") end
     return -1
 end --For all intents and purposes, OnServerRestart() is the new callback for enddecom()
 
@@ -124,7 +134,7 @@ function OnPlayerConsole(plr,msg)
             Decom()
         end,
         ["enddecom"] = function() --Use console to shutdown decom
-            if timers[3] then 
+            if timers[3] then
                 servermessage("Decomtamination Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
                 OnServerRestart() --enddecom()
             else

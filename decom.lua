@@ -54,10 +54,9 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
     end
 
     OnServerRestart() --end any instance of decom still running
-    createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7) 
+    createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 60, 1.7)
     servermessage("[FACILITY] LCZ Decontamination Process has commenced")
     timers = {createtimer("gas",500,1),createtimer("cough",4000,1),createtimer("suffering",2000,1)}
-    print(timers[3])
     --timers[1] gas, 2: Cough, 3: suffering
     return -1
 end
@@ -65,6 +64,7 @@ end
 -----------Callbacks-------------
 
 function OnRoundStarted()    
+    timers = {}
     
     decomtimer = function(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
         print(string.format("%d:%d",mins,secs))
@@ -120,9 +120,7 @@ end --Change first 0 to change when the first annoucement is made
 function OnServerRestart() --Shut down decom and reset timers list
     print("RESTART")
     if timers[3] then for x = 1, 3 do removetimer(timers[x]); print(x) end end --Only removes timers if there's something to remove
-    timers[3] = true
-    wipelist = function() timers = {}; return -1 end --Ask Goodman about this
-    if isplayerconnected(1) == 1 then createtimer("wipelist",1000,0); print("prepare") end
+    timers = {0,0,1}
     return -1
 end --For all intents and purposes, OnServerRestart() is the new callback for enddecom()
 

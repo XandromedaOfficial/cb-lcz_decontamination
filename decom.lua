@@ -118,9 +118,8 @@ function OnRoundStarted()
 end --Change first 0 to change when the first annoucement is made
 
 function OnServerRestart() --Shut down decom and reset timers list
-    print("RESTART")
-    if timers[3] then for x = 1, 3 do removetimer(timers[x]); print(x) end end --Only removes timers if there's something to remove
-    timers = {0,0,1}
+    if timers[3] then for x = 1, 3 do removetimer(timers[x]) end end --Only removes timers if there's something to remove
+    timers[3] = true
     return -1
 end --For all intents and purposes, OnServerRestart() is the new callback for enddecom()
 

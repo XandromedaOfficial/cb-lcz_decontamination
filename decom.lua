@@ -33,21 +33,20 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
             if isplayerconnected(plr) == 1 then
                 local role = getplayertype(plr)
                 if getplayerzone(plr) == 1 and role ~= 0 then
+
                     setplayerfogrange(plr,2.5)
                     local evactext = getplayermonitorwidth(plr) --Use that variable name for the moment
                     local screen_height = getplayermonitorheight(plr)
                     evactext = createplayertext(plr, "You are in decontamination gas, evacuate LCZ NOW!",evactext/12, screen_height/16, 1530000, "DS-DIGITAL.ttf", 50)
                     createtimer("wipeout", 1000, 0, plr, evactext)
                     if ifSCP(role) then dmgpo = 100 else dmgpo = 10 end
-                    if getplayerhealth(plr) > dmgpo then --If they still have health, dmg em
-                        giveplayerhealth(plr,-1*dmgpo)
+                    if getplayerhealth(plr) > dmgpo then giveplayerhealth(plr,-1*dmgpo) --If they still have health, dmg em                        
                     else --Else "kill" em
                         setplayertype(plr,0)
                         servermessage(getplayernickname(plr).." suffocated in decontamination gas")
                     end
-                else
-                    setplayerfogrange(plr,8)
-                end
+
+                else setplayerfogrange(plr,8) end
             end
         end
         return -1
@@ -134,15 +133,13 @@ function OnPlayerConsole(plr,msg)
             if timers[3] then
                 servermessage("Decomtamination Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
                 OnServerRestart() --enddecom()
-            else
-                sendmessage(plr, "Decomtamination Procedure is not currently active")
-            end
+            else sendmessage(plr, "Decomtamination Procedure is not currently active") end
         end,
         ["decomtimer"] = function() 
             OnServerRestart()
             timers[3] = true
-            recursive = function() timers[3] = false; decomtimer(10,0) end
-            createtimer("recursive",1000,0,10,0)
+            recursive = function() timers[3] = false; decomtimer(10,0); return -1 end
+            createtimer("recursive",2000,0)
         end
     }
     if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end

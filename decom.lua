@@ -137,9 +137,15 @@ function OnPlayerConsole(plr,msg)
             else
                 sendmessage(plr, "Decomtamination Procedure is not currently active")
             end
+        end,
+        ["decomtimer"] = function() 
+            OnServerRestart()
+            timers[3] = true
+            recursive = function() timers[3] = false; decomtimer(10,0) end
+            createtimer("recursive",1000,0,10,0)
         end
     }
-    if type(select[msg]) == "function" then select[msg]() end
+    if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end
 
     return -1
 end

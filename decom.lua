@@ -16,9 +16,9 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
     local ifSCP = function(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
     --Test for role if SCP. Except for zombie cause 300 hp. Will take 100 dmg and will not cough during decom. Humans (and 49-2) will take 10 dmg and audibly cough
 
-    gas = function() createsound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4); return -1 end --Create a gas hissing sound, similar to the ones in the gas chambers
+    function gas() createsound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4); return -1 end --Create a gas hissing sound, similar to the ones in the gas chambers
 
-    cough = function() --make each plr in lcz cough every 4 secs
+    function cough() --make each plr in lcz cough every 4 secs
         for plr = 1, 64 do
             if isplayerconnected(plr) then
                 if getplayertype(plr) ~= 0 and getplayerzone(plr) == 1 and not ifSCP(getplayertype(plr)) then playplayersound(plr,"SFX/Character/D9341/Cough1.ogg",10,1) end
@@ -28,7 +28,7 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
     end
 
     --This is the actual death process
-    suffering = function() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
+    function suffering() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
         for plr = 1, 64 do
             if isplayerconnected(plr) == 1 then
                 local role = getplayertype(plr)
@@ -65,7 +65,7 @@ end
 function OnRoundStarted()    
     timers = {}
     
-    decomtimer = function(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
+    function decomtimer(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
         print(string.format("%d:%d",mins,secs))
         mins,secs = tonumber(mins),tonumber(secs)
         local colour,sec = 123456 --yes, colour not color. Intialise sec as nil value which will later become a display variable
@@ -85,8 +85,8 @@ function OnRoundStarted()
         end
 
         if not timers[3] then --if decom starts in some other way, shut down timer
-            recursive = function() decomtimer(mins,secs-1); return -1 end --Screwy createtimer() work around. Restart function but with secs-1 cause thats how time works
-            createtimer("recursive", 1000, 0)
+            restart = function() decomtimer(mins,secs-1); return -1 end --Screwy createtimer() work around. Restart function but with secs-1 cause thats how time works
+            createtimer("restart", 1000, 0)
             for plr = 1, 64 do
 
                 if isplayerconnected(plr) == 1 then --Lua thinks 0 = true...
@@ -103,7 +103,7 @@ function OnRoundStarted()
         return -1
     end
 
-    decom_annouc = function(mins) --Decom annoucement. Will call decom timer when 10 mins to decom start
+    function decom_annouc(mins) --Decom annoucement. Will call decom timer when 10 mins to decom start
         mins = tonumber(mins)
         servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
         createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
@@ -137,9 +137,8 @@ function OnPlayerConsole(plr,msg)
         end,
         ["decomtimer"] = function() 
             OnServerRestart()
-            timers[3] = true
-            recursive = function() timers[3] = false; decomtimer(10,0); return -1 end
-            createtimer("recursive",2000,0)
+            recursive = function() timers = {}; decomtimer(10,0); return -1 end
+            createtimer("recursive",5000,0)
         end
     }
     if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end

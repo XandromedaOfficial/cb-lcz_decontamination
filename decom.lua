@@ -13,7 +13,7 @@ end
 
 function Decom() --Start Decom. Activates alarm, message and functions. Defines Suffering() which is the actual killing
 
-    local ifSCP = function(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
+    local function ifSCP(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
     --Test for role if SCP. Except for zombie cause 300 hp. Will take 100 dmg and will not cough during decom. Humans (and 49-2) will take 10 dmg and audibly cough
 
     function gas() createsound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4); return -1 end --Create a gas hissing sound, similar to the ones in the gas chambers
@@ -134,14 +134,18 @@ function OnPlayerConsole(plr,msg)
                 servermessage("Decomtamination Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
                 OnServerRestart() --enddecom()
             else sendmessage(plr, "Decomtamination Procedure is not currently active") end
-        end,
-        ["decomtimer"] = function() 
-            OnServerRestart()
-            recursive = function() timers = {}; decomtimer(10,0); return -1 end
-            createtimer("recursive",5000,0)
         end
     }
+
     if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end
 
+    if instr(msg, "decomtimer", 1) then
+        print("lego")
+        _,msg = tonumber(string.gmatch(msg, " "))
+        OnServerRestart()
+        recursive = function() timers = {}; decomtimer(msg,0); return -1 end
+        createtimer("recursive",5000,0)
+    end
+    
     return -1
 end

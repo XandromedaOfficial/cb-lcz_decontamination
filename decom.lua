@@ -118,31 +118,41 @@ end --Change first 0 to change when the first annoucement is made
 
 function OnServerRestart() --Shut down decom and reset timers list
     if timers[3] then for x = 1, 3 do removetimer(timers[x]) end end --Only removes timers if there's something to remove
-    timers[3] = true
+    timers[3] = true --End decomtimer if active
     return -1
 end --For all intents and purposes, OnServerRestart() is the new callback for enddecom()
 
 function OnPlayerConsole(plr,msg)
 
+    local enddecom = function() --Use console to shutdown decom
+        if timers[3] then
+            servermessage("[FACILITY] Decomtamination Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
+            OnServerRestart() --enddecom()
+        else sendmessage(plr, "[DECOM] Decomtamination Procedure is not currently active") end
+    end
+
     local select = {
         ["decom"] = function() --Use console to immediately activate decom procedure
-            servermessage("Decomtamination Procedure manually activated by "..getplayernickname(plr)) --Make sure everyone knows whose gassing them
+            servermessage("[FACILITY] Decomtamination Procedure manually activated by "..getplayernickname(plr)) --Make sure everyone knows whose gassing them
             Decom()
         end,
-        ["enddecom"] = function() --Use console to shutdown decom
-            if timers[3] then
-                servermessage("Decomtamination Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
-                OnServerRestart() --enddecom()
-            else sendmessage(plr, "Decomtamination Procedure is not currently active") end
-        end
+        ["enddecom"] = function() enddecom(); decomtimer(10,0) end,
+        ["endtimer"] = function() enddecom() end
     }
 
     if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end
 
     if string.find(msg, "decomtimer ") then
-        OnServerRestart()
-        recursive = function() timers = {}; decomtimer(tonumber(string.gsub(msg, "%D",'')),0); return -1 end
-        createtimer("recursive",5000,0)
+        if not pcall(function()
+            OnServerRestart()
+            recursive = function()
+                timers = {}
+                decomtimer(tonumber(string.gsub(msg, "%D",'')),0) --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
+                return -1
+            end
+            createtimer("recursive",5000,0)
+            sendmessage(plr,string.format("[DECOM] Decomtamination Timer set to %d minutes",msg))
+        end) then sendmessage(plr,"[DECOM] Error, Decomtamination Timer could not be set") end --Please enter a parameter
     end
 
     return -1

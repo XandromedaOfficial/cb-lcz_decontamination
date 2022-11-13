@@ -1,7 +1,7 @@
 timers = {}
 
 function OnScriptLoaded() --Check if script loaded
-    print("Decom")
+    print("Decom")    
     return -1
 end
 
@@ -139,13 +139,11 @@ function OnPlayerConsole(plr,msg)
 
     if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end
 
-    if instr(msg, "decomtimer", 1) then
-        print("lego")
-        _,msg = tonumber(string.gmatch(msg, " "))
+    if string.find(msg, "decomtimer ") then
         OnServerRestart()
-        recursive = function() timers = {}; decomtimer(msg,0); return -1 end
+        recursive = function() timers = {}; decomtimer(tonumber(string.gsub(msg, "%D",'')),0); return -1 end
         createtimer("recursive",5000,0)
     end
-    
+
     return -1
 end

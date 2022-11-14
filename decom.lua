@@ -99,6 +99,8 @@ function OnRoundStarted()
     end
 
     function decom_annouc(mins) --Decom annoucement. Will call decom timer when 10 mins to decom start        
+        --Minute = 60000
+        --5 mins = 300000
         timers = {}
         mins = tonumber(mins)
         servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
@@ -106,12 +108,12 @@ function OnRoundStarted()
         if mins > 10 then
             local secs
             if mins - 5 < 10 then
-                secs = (mins - 10)*3600--Remember to change to 3600000
+                secs = (mins - 10)*600--Remember to change to 60000
                 mins = 15
-            else secs = 1000 end
+            else secs = 300 end
             recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...
             createtimer("decom_annouc",secs,0,mins-5)
-        else createtimer("decomtimer",1000,0,mins,0) end
+        else createtimer("decomtimer",300,0,mins,0) end
         --Wait 5 mins. Then if <= 10 mins to decom activate decomtimer() else annouc
         return -1
     end
@@ -156,7 +158,7 @@ function OnPlayerConsole(plr,msg)
         timers[3] = true
         msg = string.gsub(msg, "%D",'') --For some reason, using tonumber() here adds one to the number given. %D targets all non-number (or decimal) characters. %d would target numbers
         if type(tonumber(msg)) == "nil" then sendmessage(plr,"[DECOM] Error, Decomtamination Timer could not be set") else createtimer("decom_annouc",2000,0,tonumber(msg)) end
-        
+
         --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
         -- This wll use decom_annouc system
     end

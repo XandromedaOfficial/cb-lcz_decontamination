@@ -1,7 +1,7 @@
 timers = {}
 
 function OnScriptLoaded() --Check if script loaded
-    print("Decom")    
+    print("Decom")
     return -1
 end
 
@@ -60,7 +60,6 @@ function OnRoundStarted()
     timers = {}
     
     function decomtimer(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
-        print(string.format("%d:%d",mins,secs))
         mins,secs = tonumber(mins),tonumber(secs)
         local colour,sec = 123456 --yes, colour not color. Intialise sec as nil value which will later become a display variable
 
@@ -95,13 +94,19 @@ function OnRoundStarted()
     end
 
     function decom_annouc(mins) --Decom annoucement. Will call decom timer when 10 mins to decom start
-        print(mins)
         mins = tonumber(mins)
-        print(mins)
         servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
-        createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
-        recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...        
-        if mins > 10 then createtimer("recursive",1000,0) else createtimer("decomtimer",1000,0,mins,0) end --Wait 5 mins. Then if 10 mins to decom activate decomtimer() else annouc
+        createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)        
+        if mins > 10 then
+            local secs
+            if mins - 5 < 10 then
+                secs = (mins - 10)*360--Remember to change to 3600000
+                mins = 15
+            else secs = 1000 end
+            recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...        
+            createtimer("recursive",secs,0)
+        else createtimer("decomtimer",1000,0,mins,0) end
+        --Wait 5 mins. Then if <= 10 mins to decom activate decomtimer() else annouc
         return -1
     end
 
@@ -140,15 +145,11 @@ function OnPlayerConsole(plr,msg)
 
     if string.find(msg, "decomtimer ") then
         if not pcall(function()
+
             OnServerRestart()
-            recursive = function()
-                timers = {}
-                print(tonumber(string.gsub(msg, "%D",'')))
-                decom_annouc(tonumber(string.gsub(msg, "%D",''))) --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
-                --Use decom_annouc system
-                return -1
-            end
-            createtimer("recursive",5000,0)
+            msg = string.gsub(msg, "%D",'') --For some reason, using tonumber() here adds one to the number given.
+            decom_annouc(tonumber(msg)) --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
+            --Use decom_annouc system
             
         end) then sendmessage(plr,"[DECOM] Error, Decomtamination Timer could not be set") end --Please enter a parameter
     end

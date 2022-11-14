@@ -11,6 +11,8 @@ function wipeout(plr,txt)
     return -1
 end
 
+function plr_count(Run_Fuction) for plr = 1, 64 do if isplayerconnected(plr) == 1 then Run_Fuction(plr) end end end --Input a list of instruction which will run for every connected player
+
 function Decom() --Start Decom. Activates alarm, message and functions. Defines Suffering() which is the actual killing
 
     local function ifSCP(role) if role == 6 or role == 5 or role > 9 and role ~= 13 then return true else return false end end
@@ -18,19 +20,13 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
 
     function gas() createsound("SFX/General/Hiss.ogg",72, 0, 133, 70, 4); return -1 end --Create a gas hissing sound, similar to the ones in the gas chambers
 
-    function cough() --make each plr in lcz cough every 4 secs
-        for plr = 1, 64 do
-            if isplayerconnected(plr) then
-                if getplayertype(plr) ~= 0 and getplayerzone(plr) == 1 and not ifSCP(getplayertype(plr)) then playplayersound(plr,"SFX/Character/D9341/Cough1.ogg",10,1) end
-            end
-        end
-        return -1
+    function cough() --make each plr in lcz cough every 4 secs        
+        plr_count(function(plr) if getplayertype(plr) ~= 0 and getplayerzone(plr) == 1 and not ifSCP(getplayertype(plr)) then playplayersound(plr,"SFX/Character/D9341/Cough1.ogg",10,1) end end); return -1
     end
 
     --This is the actual death process
     function suffering() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
-        for plr = 1, 64 do
-            if isplayerconnected(plr) == 1 then
+        plr_count(function(plr)
                 local role = getplayertype(plr)
                 if getplayerzone(plr) == 1 and role ~= 0 then
 
@@ -47,9 +43,7 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
                     end
 
                 else setplayerfogrange(plr,8) end
-            end
-        end
-        return -1
+            end); return -1
     end
 
     OnServerRestart() --end any instance of decom still running
@@ -87,29 +81,27 @@ function OnRoundStarted()
         if not timers[3] then --if decom starts in some other way, shut down timer
             restart = function() decomtimer(mins,secs-1); return -1 end --Screwy createtimer() work around. Restart function but with secs-1 cause thats how time works
             createtimer("restart", 1000, 0)
-            for plr = 1, 64 do
-
-                if isplayerconnected(plr) == 1 then --Lua thinks 0 = true...
-                    if getplayerzone(plr) == 1 and getplayertype(plr) ~= 0 then
-                        local screen_width = getplayermonitorwidth(plr)
-                        local screen_height = getplayermonitorheight(plr) --These variables dont get used anymore, so y not
-                        sec = createplayertext(plr, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
-                        createtimer("wipeout",1000,0,plr,sec)
-                    end
+            plr_count(function(plr)
+                if getplayerzone(plr) == 1 and getplayertype(plr) ~= 0 then
+                    local screen_width = getplayermonitorwidth(plr)
+                    local screen_height = getplayermonitorheight(plr) --These variables dont get used anymore, so y not
+                    sec = createplayertext(plr, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
+                    createtimer("wipeout",1000,0,plr,sec)
                 end
-
-            end
+            end)
         end
         
         return -1
     end
 
     function decom_annouc(mins) --Decom annoucement. Will call decom timer when 10 mins to decom start
+        print(mins)
         mins = tonumber(mins)
+        print(mins)
         servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
         createsound("SFX/Alarm/Alarm3.ogg",72, 0, 133, 75, 1.7)
         recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...        
-        if mins > 10 then createtimer("recursive",1000,0) else createtimer("decomtimer",1000,0,10,0) end --Wait 5 mins. Then if 10 mins to decom activate decomtimer() else annouc
+        if mins > 10 then createtimer("recursive",1000,0) else createtimer("decomtimer",1000,0,mins,0) end --Wait 5 mins. Then if 10 mins to decom activate decomtimer() else annouc
         return -1
     end
 
@@ -126,9 +118,12 @@ end --For all intents and purposes, OnServerRestart() is the new callback for en
 function OnPlayerConsole(plr,msg)
 
     local enddecom = function() --Use console to shutdown decom
+        plr_count(function(plr) if getplayerzone(plr) == 1 then setplayerfogrange(8) end end)
         if timers[3] then
             servermessage("[FACILITY] Decomtamination Procedure ended by "..getplayernickname(plr)) --Make sure everyone knows who saved them
             OnServerRestart() --enddecom()
+            reset = function() timers = {};return -1 end
+            createtimer("reset",2000,0)
         else sendmessage(plr, "[DECOM] Decomtamination Procedure is not currently active") end
     end
 
@@ -148,11 +143,13 @@ function OnPlayerConsole(plr,msg)
             OnServerRestart()
             recursive = function()
                 timers = {}
-                decomtimer(tonumber(string.gsub(msg, "%D",'')),0) --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
+                print(tonumber(string.gsub(msg, "%D",'')))
+                decom_annouc(tonumber(string.gsub(msg, "%D",''))) --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
+                --Use decom_annouc system
                 return -1
             end
             createtimer("recursive",5000,0)
-            sendmessage(plr,string.format("[DECOM] Decomtamination Timer set to %d minutes",msg))
+            
         end) then sendmessage(plr,"[DECOM] Error, Decomtamination Timer could not be set") end --Please enter a parameter
     end
 

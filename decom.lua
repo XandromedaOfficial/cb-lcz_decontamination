@@ -29,27 +29,26 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
     --This is the actual death process
     function suffering() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
         plr_loop(function(plr)
-                local role = getplayertype(plr)
-                if getplayerzone(plr) == 1 and role ~= 0 then
+            local role = getplayertype(plr)
+            if getplayerzone(plr) == 1 and role ~= 0 then
 
-                    setplayerfogrange(plr,2.5)
-                    local evactext = getplayermonitorwidth(plr) --Use that variable name for the moment
-                    local screen_height = getplayermonitorheight(plr)
-                    evactext = createplayertext(plr, "You are in decontamination gas, evacuate LCZ NOW!",evactext/12, screen_height/16, 1530000, "DS-DIGITAL.ttf", 50)
-                    createtimer("wipeout", 1000, 0, plr, evactext)
-                    if ifSCP(role) then dmgpo = 100 else dmgpo = 10 end
-                    if getplayerhealth(plr) > dmgpo then giveplayerhealth(plr,-1*dmgpo) --If they still have health, dmg em
-                    else --Else "kill" em
-                        setplayertype(plr,0)
-                        servermessage(getplayernickname(plr).." suffocated in decontamination gas")
-                    end
+                setplayerfogrange(plr,2.5)
+                local evactext = getplayermonitorwidth(plr) --Use that variable name for the moment
+                local screen_height = getplayermonitorheight(plr)
+                evactext = createplayertext(plr, "You are in decontamination gas, evacuate LCZ NOW!",evactext/12, screen_height/16, 1530000, "DS-DIGITAL.ttf", 50)
+                createtimer("wipeout", 1000, 0, plr, evactext)
+                if ifSCP(role) then dmgpo = 100 else dmgpo = 10 end
+                if getplayerhealth(plr) > dmgpo then giveplayerhealth(plr,-1*dmgpo) --If they still have health, dmg em
+                else --Else "kill" em
+                    setplayertype(plr,0)
+                    servermessage(getplayernickname(plr).." suffocated in decontamination gas")
+                end
 
-                else setplayerfogrange(plr,8) end
-            end); return -1
+            else setplayerfogrange(plr,8) end
+        end); return -1
     end
 
     OnServerRestart() --end any instance of decom still running
-
     servermessage("[FACILITY] LCZ Decontamination Process has commenced")
     timers = {createtimer("gas",500,1),createtimer("cough",4000,1),createtimer("suffering",2000,1)}
     --timers[1] gas, 2: Cough, 3: suffering
@@ -59,7 +58,6 @@ end
 -----------Callbacks-------------
 
 function OnRoundStarted()
-    timers = {}
 
     function decomtimer(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
         mins,secs = tonumber(mins),tonumber(secs)
@@ -100,18 +98,19 @@ function OnRoundStarted()
         return -1
     end
 
-    function decom_annouc(mins) --Decom annoucement. Will call decom timer when 10 mins to decom start
+    function decom_annouc(mins) --Decom annoucement. Will call decom timer when 10 mins to decom start        
+        timers = {}
         mins = tonumber(mins)
         servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
         alarm()
         if mins > 10 then
             local secs
             if mins - 5 < 10 then
-                secs = (mins - 10)*360--Remember to change to 3600000
+                secs = (mins - 10)*3600--Remember to change to 3600000
                 mins = 15
             else secs = 1000 end
             recursive = function() decom_annouc(mins-5); return -1 end --Lua plays a bit funny with the createtimer() function so...
-            createtimer("recursive",secs,0)
+            createtimer("decom_annouc",secs,0,mins-5)
         else createtimer("decomtimer",1000,0,mins,0) end
         --Wait 5 mins. Then if <= 10 mins to decom activate decomtimer() else annouc
         return -1
@@ -143,7 +142,7 @@ function OnPlayerConsole(plr,msg)
         end,
         ["enddecom"] = function() -- Use console to cancel decom
             if timers[3] then
-                plr_loop(function(x) if getplayerzone(x) == 1 then setplayerfogrange(x) end end)                
+                plr_loop(function(x) if getplayerzone(x) == 1 then setplayerfogrange(x,8) end end)
                 endtimer("[FACILITY] Decomtamination Procedure ended by "..getplayernickname(plr))
                 decomtimer(10,0) --Reset decom timer to 10 mins
             else sendmessage(plr, "[DECOM] Decomtamination Procedure is not currently active") end
@@ -154,14 +153,15 @@ function OnPlayerConsole(plr,msg)
     if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end
 
     if string.find(msg, "decomtimer") then
-        if not pcall(function()
-
-            OnServerRestart()
-            msg = string.gsub(msg, "%D",'') --For some reason, using tonumber() here adds one to the number given.
-            decom_annouc(tonumber(msg)) --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
+        reset = function()
+            timers[3] = true
+            msg = string.gsub(msg, "%D",'') --For some reason, using tonumber() here adds one to the number given. %D targets all non-number (or decimal) characters. %d would target numbers
+            if type(tonumber(msg)) == "nil" then return true end
+            createtimer("decom_annouc",2000,0,tonumber(msg)) --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins            
             --Use decom_annouc system
-            
-        end) then sendmessage(plr,"[DECOM] Error, Decomtamination Timer could not be set") end --Please enter a parameter
+            return false            
+        end
+        if reset() then sendmessage(plr,"[DECOM] Error, Decomtamination Timer could not be set") end --Please enter a parameter
     end
 
     return -1

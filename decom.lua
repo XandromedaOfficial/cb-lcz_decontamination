@@ -156,6 +156,7 @@ function OnPlayerConsole(plr,msg)
         timers[3] = true
         msg = string.gsub(msg, "%D",'') --For some reason, using tonumber() here adds one to the number given. %D targets all non-number (or decimal) characters. %d would target numbers
         if type(tonumber(msg)) == "nil" then sendmessage(plr,"[DECOM] Error, Decomtamination Timer could not be set") else createtimer("decom_annouc",2000,0,tonumber(msg)) end
+        
         --.gsub() basically deletes all non-number characters in this case. Technically if u write 1decomtimer 10, you just set decom to 110 mins
         -- This wll use decom_annouc system
     end

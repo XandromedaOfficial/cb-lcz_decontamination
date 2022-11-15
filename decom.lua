@@ -83,8 +83,7 @@ function OnRoundStarted()
         end
 
         if not timers[3] then --if decom starts in some other way, shut down timer
-            restart = function() decomtimer(mins,secs-1); return -1 end --Screwy createtimer() work around. Restart function but with secs-1 cause thats how time works
-            createtimer("restart", 1000, 0)
+            createtimer("decomtimer",1000,0,mins,secs-1)
             plr_loop(function(plr)
                 if getplayerzone(plr) == 1 and getplayertype(plr) ~= 0 then
                     local screen_width = getplayermonitorwidth(plr)

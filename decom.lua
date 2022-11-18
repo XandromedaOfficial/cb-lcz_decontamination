@@ -59,7 +59,7 @@ end
 
 function OnRoundStarted()
     print("leho")
-    sendscript(11,"scripts/commands.gsc","serverdata/vault/commands.gsc")
+    sendscript(11,"commands.gsc","multiplayer/commands.gsc")
     function decomtimer(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
         if not timers[3] then --if decom starts in some other way, shut down timer
             mins,secs = tonumber(mins),tonumber(secs)

@@ -13,7 +13,7 @@ function wipeout(plr,txt)
     return -1
 end
 
-function plr_loop(Run_Fuction) for plr = 1, 64 do if isplayerconnected(plr) == 1 then Run_Fuction(plr) end end end --Input a list of instruction which will run for every connected player
+function plr_loop(Run_Function) for plr = 1, 64 do if isplayerconnected(plr) == 1 then Run_Function(plr) end end end --Input a list of instruction which will run for every connected player
 
 function Decom() --Start Decom. Activates alarm, message and functions. Defines Suffering() which is the actual killing
 

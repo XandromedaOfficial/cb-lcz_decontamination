@@ -148,8 +148,8 @@ function OnPlayerConsole(plr,msg)
         end,
         ["endtimer"] = function() endtimer("[FACILITY] Decomtamination Countdown Cancelled by "..getplayernickname(plr)) end --Cancel timer
     }
-
-    if type(select[string.lower(msg)]) == "function" then select[string.lower(msg)]() end
+    msg = string.lower(msg:gsub("%s+","")) -- Strip and lower command 
+    if type(select[msg]) == "function" then select[msg]() end
 
     if string.find(msg, "decomtimer") then
         timers[3] = true

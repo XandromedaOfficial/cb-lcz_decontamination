@@ -44,7 +44,7 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
                 local screen_height = getplayermonitorheight(plr)
                 evactext = createplayertext(plr, "You are in decontamination gas, evacuate LCZ NOW!",evactext/12, screen_height/16, 1530000, "DS-DIGITAL.ttf", 50)
                 createtimer("wipeout", 1000, 0, plr, evactext)
-                
+
                 if ifSCP(role) then dmgpo = 100 else dmgpo = 10 end
                 if getplayerhealth(plr) > dmgpo then giveplayerhealth(plr,-1*dmgpo) --If they still have health, dmg em
                 else --Else "kill" em
@@ -67,42 +67,41 @@ end
 
 function OnRoundStarted()
     function decomtimer(mins,secs) --Countdown timer. Shows time till decom starts on player's screen during last 10 mins
-        if not timers[3] then --if decom starts in some other way, shut down timer
-            mins,secs = tonumber(mins),tonumber(secs)
-            local colour,sec = 123456 --yes, colour not color. Intialise sec as nil value which will later become a display variable
+        if not timers[3] then return -1 end--if decom starts in some other way, shut down timer
+        
+        mins,secs = tonumber(mins),tonumber(secs)
+        local colour,sec = 123456 --yes, colour not color. Intialise sec as nil value which will later become a display variable
+        
+        if secs < 10 then
+            if mins == 0 then colour = 16711680 end --If final 10 secs, turn red
+            sec = "0"..secs -- If less than 10 secs, add a zero before the number so 9:1 becomes 9:01.
+        else sec = secs end --display variable
 
-            if secs < 10 then
-                if mins == 0 then colour = 16711680 end --If final 10 secs, turn red
-                sec = "0"..secs -- If less than 10 secs, add a zero before the number so 9:1 becomes 9:01.
-            else sec = secs end --display variable
+        local decomtext = string.format("LCZ Decontamination will begin in %d:%s",mins,sec) --Set up display name
 
-            local decomtext = string.format("LCZ Decontamination will begin in %d:%s",mins,sec) --Set up display name
+        if secs == 0 then --Change secs and mins for next second of decomtimer
+            if mins == 0 then Decom(); return -1 --Timer finishes, Suffering begins
+            else
 
-            if secs == 0 then --Change secs and mins for next second of decomtimer
-                if mins == 0 then Decom(); return -1 --Timer finishes, Suffering begins
-                else
-
-                    if mins == 5 then
-                        servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
-                        alarm()
-                    end
-                    mins = mins - 1
-                    secs = 60
-
+                if mins == 5 then
+                    servermessage(string.format("[FACILITY] LCZ Decomtamination Process will begin in T-Minus %d Minutes",mins)) --Alert Facility of incoming doom
+                    alarm()
                 end
+                mins = mins - 1
+                secs = 60
 
             end
-                    
-            createtimer("decomtimer",1000,0,mins,secs-1)
-            plr_loop(function(plr)
-                if getplayerzone(plr) ~= 1 or getplayertype(plr) == 0 then return end
-
-                local screen_width = getplayermonitorwidth(plr)
-                local screen_height = getplayermonitorheight(plr) --These variables dont get used anymore, so y not
-                sec = createplayertext(plr, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
-                createtimer("wipeout",1000,0,plr,sec)
-            end)
         end
+                
+        createtimer("decomtimer",1000,0,mins,secs-1)
+        plr_loop(function(plr)
+            if getplayerzone(plr) ~= 1 or getplayertype(plr) == 0 then return end
+
+            local screen_width = getplayermonitorwidth(plr)
+            local screen_height = getplayermonitorheight(plr) --These variables dont get used anymore, so y not
+            sec = createplayertext(plr, decomtext, screen_width/32, screen_height/8,  colour, "DS-DIGITAL.ttf",50) --not using sec variable anymore so might as well repurpose it
+            createtimer("wipeout",1000,0,plr,sec)
+        end)
 
         return -1
     end

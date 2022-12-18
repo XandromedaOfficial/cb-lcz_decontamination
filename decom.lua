@@ -36,13 +36,15 @@ function Decom() --Start Decom. Activates alarm, message and functions. Defines 
     function suffering() --detect plrs and dmg in LCZ. See into replacing this with LCZ checkpoint lockdown protocol
         plr_loop(function(plr)
             local role = getplayertype(plr)
-            if getplayerzone(plr) == 1 and role ~= 0 then setplayerfogrange(plr,8)
-            else
+            if getplayerzone(plr) ~= 1 then setplayerfogrange(plr,8)
+            elseif role ~= 0 then
+
                 setplayerfogrange(plr,2.5)
                 local evactext = getplayermonitorwidth(plr) --Use that variable name for the moment
                 local screen_height = getplayermonitorheight(plr)
                 evactext = createplayertext(plr, "You are in decontamination gas, evacuate LCZ NOW!",evactext/12, screen_height/16, 1530000, "DS-DIGITAL.ttf", 50)
                 createtimer("wipeout", 1000, 0, plr, evactext)
+                
                 if ifSCP(role) then dmgpo = 100 else dmgpo = 10 end
                 if getplayerhealth(plr) > dmgpo then giveplayerhealth(plr,-1*dmgpo) --If they still have health, dmg em
                 else --Else "kill" em
@@ -69,11 +71,10 @@ function OnRoundStarted()
             mins,secs = tonumber(mins),tonumber(secs)
             local colour,sec = 123456 --yes, colour not color. Intialise sec as nil value which will later become a display variable
 
-            if secs < 10 then sec = secs
-            else
+            if secs < 10 then
                 if mins == 0 then colour = 16711680 end --If final 10 secs, turn red
                 sec = "0"..secs -- If less than 10 secs, add a zero before the number so 9:1 becomes 9:01.
-            end --display variable
+            else sec = secs end --display variable
 
             local decomtext = string.format("LCZ Decontamination will begin in %d:%s",mins,sec) --Set up display name
 
